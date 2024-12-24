@@ -69,40 +69,42 @@
 <body>
     <div class="container-fluid position-absolute h-100 p-0" id="main-container">
         <div class="row bg-transparent h-75 w-100 m-0" id="secondary-container">
-            <div class="col-md-12 col-lg-10 col-xl-8 bg-white shadow-lg" id="content-container">
+            <div class="col-10 col-sm-9 col-md-11 col-lg-10 col-xl-8 bg-white shadow-lg" id="content-container">
                 <div class="row bg-white h-100">
-                    <div class="col-6 p-3" id="container-left">
+                    <!-- The container-left will disappear at screen size below md -->
+                    <!-- The display is 'none' in default, and overridden to 'flex' at screen size above md -->
+                    <div class="col-md-6 d-md-flex d-none p-3" id="container-left">
                         <div class="row h-100 w-100" id="img-holder">
                             <img src="../media/scpg-logo-transparent.png" alt="SEGi College Penang" id="logo">
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6 bg-transparent p-3" id="container-right">
+                    <div class="col-md-6 col-sm-12 bg-transparent p-3" id="container-right">
                         <div class="row h-100 w-100" id="form-holder">
                             <div class="container h-75 w-75">
                                 <p class="display-5 text-center fw-normal">Sign In</p>
                                 <div class="container w-100 h-75 mt-5 pt-2">
                                     <form class="needs-validation" action="login.php" method="post" autocomplete="off">
-                                        <!-- get email address -->
+                                        <!-- Get email address -->
                                         <label for="email" class="form-label">Email address:</label>
                                         <div class="input-group mb-3">
                                             <span class="input-group-text">
                                                 <i class="bi bi-envelope-fill"></i>
                                             </span>
-                                            <input type="email" class="form-control" placeholder="Email address:" id="email" name="email" required>
+                                            <input type="email" class="form-control" placeholder="name@segi4u.my" id="email" name="email" required>
                                         </div>
-                                        <!-- get password -->
+                                        <!-- Get password -->
                                         <label for="password" class="form-label">Password:</label>
                                         <div class="input-group mb-1">
                                             <span class="input-group-text">
                                                 <i class="bi bi-lock-fill"></i>
                                             </span>
-                                            <input type="password" class="form-control" placeholder="Password:" id="password" name="password" required>
+                                            <input type="password" class="form-control" placeholder="abc_123" id="password" name="password" required>
                                         </div>
                                         <i class="bi bi-eye-slash-fill" id="show-pass-btn"></i>
                                         <div class="row text-end">
-                                            <a href="login.php" class="link-primary">Recovery Password</a>
+                                            <a href="forgot-pass.php" class="link-primary">Recovery Password</a>
                                         </div>
-                                        <button type="submit" class="btn btn-primary w-100 mt-3">Sign In</button>
+                                        <button type="submit" class="btn btn-primary w-100 mt-3" name="submit">Sign In</button>
                                     </form>
                                 </div>
                             </div>
@@ -112,7 +114,9 @@
             </div>
         </div>
     </div>
+    <!-- Bootstrap CSS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Functional script -->
     <script>
         const showpassbtn = document.getElementById("show-pass-btn");
         const password = document.getElementById("password");
