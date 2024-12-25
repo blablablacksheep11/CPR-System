@@ -76,7 +76,7 @@
                         <div class="row w-100 h-25 bg-transparent p-0 m-0" id="main-logo-container">
                             <div class="row w-100 h-50 bg-transparent p-0 m-0" id="secondary-logo-container">
                                 <div class="container p-0 m-0" id="logo-holder">
-                                    <i class="bi bi-lock h2 text-secondary m-0 p-0" id="logo"></i>
+                                    <i class="bi bi-inbox h2 text-secondary m-0 p-0" id="logo"></i>
                                 </div>
                             </div>
                         </div>
