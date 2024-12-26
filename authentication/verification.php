@@ -9,6 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+        .form-control {
+            width: 18%;
+            height: 75px;
+        }
+
         #main-container {
             display: flex;
             align-items: center;
@@ -32,7 +37,7 @@
         }
 
         #content-container {
-            width: 375px;
+            width: 420px;
         }
 
         #main-logo-container {
@@ -60,8 +65,18 @@
             justify-content: center;
         }
 
-        #hypertext {
+        #resend-hypertext {
             text-decoration: none;
+        }
+
+        #back-hypertext {
+            text-decoration: none;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
     </style>
 </head>
@@ -84,19 +99,31 @@
                         <div class="row h-75 w-100 bottom-0 p-0 m-0">
                             <div class="container h-100 w-100 m-0 p-0">
                                 <!-- Heading & description -->
-                                <p class="display-6 text-center fw-normal m-0 p-0">Forgot Password?</p>
-                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Enter your email address to get instructions to reset your password.</p>
+                                <p class="display-6 text-center fw-normal m-0 p-0">Enter verification code</p>
+                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">We send a code to name@segi4u.my.</p>
                                 <!-- Form holder -->
                                 <div class="container w-100 h-50 px-4 mt-3">
                                     <!-- Form content -->
                                     <form action="forgot-pass.php" method="post">
-                                        <input type="email" class="form-control" placeholder="name@segi4u.my" required>
-                                        <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
+                                        <div class="container-fluid m-0 p-0 d-flex justify-content-between">
+                                            <input type="number" class="form-control text-center fs-2">
+                                            <input type="number" class="form-control text-center fs-2">
+                                            <input type="number" class="form-control text-center fs-2">
+                                            <input type="number" class="form-control text-center fs-2">
+                                        </div>
+                                        <button class="btn btn-primary w-100 mt-4" type="submit">Continue</button>
                                     </form>
+                                    <!-- Resend hypertext -->
+                                    <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
+                                        <div class="col-12 m-0 p-0 d-flex justify-content-center">
+                                            <p class="m-0 p-0">Didn't receive the email?&nbsp;</p>
+                                            <a class="m-0 p-0" href="login.php" id="resend-hypertext">Click here</a>
+                                        </div>
+                                    </div>
                                     <!-- Back hypertext -->
                                     <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
                                         <div class="col-6 m-0 p-0">
-                                            <a class="bi bi-arrow-left" href="login.php" id="hypertext">&nbsp;Back to Sign In</a>
+                                            <a class="bi bi-arrow-left" href="login.php" id="back-hypertext">&nbsp;Back to Sign In</a>
                                         </div>
                                     </div>
                                 </div>
