@@ -6,8 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPR System</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         #main-container {
             display: flex;
@@ -76,7 +80,7 @@
                         <div class="row w-100 h-25 bg-transparent p-0 m-0" id="main-logo-container">
                             <div class="row w-100 h-50 bg-transparent p-0 m-0" id="secondary-logo-container">
                                 <div class="container p-0 m-0" id="logo-holder">
-                                    <i class="bi bi-arrow-clockwise h2 text-secondary m-0 p-0" id="logo"></i>
+                                    <i class="bi bi-lock h2 text-secondary m-0 p-0" id="logo"></i>
                                 </div>
                             </div>
                         </div>
@@ -84,20 +88,22 @@
                         <div class="row h-75 w-100 bottom-0 p-0 m-0">
                             <div class="container h-100 w-100 m-0 p-0">
                                 <!-- Heading & description -->
-                                <p class="display-6 text-center fw-normal m-0 p-0">Set new password</p>
-                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Avoid using easily guessable information like birthdays or names. Make it strong and secure!</p>
+                                <p class="display-6 text-center fw-normal m-0 p-0">Forgot Password?</p>
+                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Enter your email address to get
+                                    instructions to reset your password.</p>
                                 <!-- Form holder -->
                                 <div class="container w-100 h-50 px-4 mt-3">
                                     <!-- Form content -->
-                                    <form action="forgot-pass.php" method="post">
-                                        <input type="password" class="form-control" placeholder="Create new password" required>
-                                        <input type="password" class="form-control mt-3" placeholder="Confirm your password" required>
-                                        <button class="btn btn-primary w-100 mt-3" type="submit">Reset password</button>
+                                    <form action="forgot-pass.php" method="post" id="email-form" autocomplete="off">
+                                        <input type="email" class="form-control" placeholder="name@segi4u.my" id="email"
+                                            name="email" pattern="[a-z].{0,}@segi\.edu\.my" required>
+                                        <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
                                     </form>
                                     <!-- Back hypertext -->
                                     <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
                                         <div class="col-6 m-0 p-0">
-                                            <a class="bi bi-arrow-left" href="login.html" id="hypertext">&nbsp;Back to Sign In</a>
+                                            <a class="bi bi-arrow-left" href="login.html" id="hypertext">&nbsp;Back to
+                                                Sign In</a>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +115,44 @@
         </div>
     </div>
     <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- Functional script -->
+    <script>
+        $(document).ready(function () {
+            // When the form submitted
+            $(document).on("submit", "#email-form", function (e) {
+                e.preventDefault();  // Stop the webpage from refreshing
+
+                // The checkValidity() keep the original form validation in HTML5 under preventDefault()
+                if (this.checkValidity()) {
+                    let submit = true;
+                    let email = $("#email").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "forgot-pass.php",
+                        data: {
+                            submit: submit,
+                            email: email
+                        },
+                        success: function (response) {
+                            // If forgot-pass.php returned "success"
+                            if (response == "success") {
+                                // Load the verification interface
+                                $("body").load("verification.php");
+                            } else {
+                                alert(response);  // Display the error messages
+                            }
+                        }
+                    })
+                } else {
+                    this.reportValidity(); // Display the original HTML5 validation messages
+                }
+            })
+        })
+    </script>
 </body>
 
 </html>

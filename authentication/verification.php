@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        .form-control {
+        .number-field{
             width: 18%;
             height: 75px;
         }
@@ -106,10 +106,10 @@
                                     <!-- Form content -->
                                     <form action="forgot-pass.php" method="post">
                                         <div class="container-fluid m-0 p-0 d-flex justify-content-between">
-                                            <input type="number" class="form-control text-center fs-2">
-                                            <input type="number" class="form-control text-center fs-2">
-                                            <input type="number" class="form-control text-center fs-2">
-                                            <input type="number" class="form-control text-center fs-2">
+                                            <input type="number" class="form-control text-center fs-2 number-field">
+                                            <input type="number" class="form-control text-center fs-2 number-field">
+                                            <input type="number" class="form-control text-center fs-2 number-field">
+                                            <input type="number" class="form-control text-center fs-2 number-field">
                                         </div>
                                         <button class="btn btn-primary w-100 mt-4" type="submit">Continue</button>
                                     </form>
@@ -123,7 +123,7 @@
                                     <!-- Back hypertext -->
                                     <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
                                         <div class="col-6 m-0 p-0">
-                                            <a class="bi bi-arrow-left" href="login.php" id="back-hypertext">&nbsp;Back to Sign In</a>
+                                            <a class="bi bi-arrow-left" href="login.html" id="back-hypertext">&nbsp;Back to Sign In</a>
                                         </div>
                                     </div>
                                 </div>
