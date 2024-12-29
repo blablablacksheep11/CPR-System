@@ -9,9 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         #main-container {
             display: flex;
@@ -67,6 +64,22 @@
         #hypertext {
             text-decoration: none;
         }
+
+        #show-pass-btn1 {
+            float: right;
+            position: relative;
+            right: 10px;
+            margin-top: -32px;
+            z-index: 5;
+        }
+
+        #show-pass-btn2 {
+            float: right;
+            position: relative;
+            right: 10px;
+            margin-top: -32px;
+            z-index: 5;
+        }
     </style>
 </head>
 
@@ -80,7 +93,7 @@
                         <div class="row w-100 h-25 bg-transparent p-0 m-0" id="main-logo-container">
                             <div class="row w-100 h-50 bg-transparent p-0 m-0" id="secondary-logo-container">
                                 <div class="container p-0 m-0" id="logo-holder">
-                                    <i class="bi bi-lock h2 text-secondary m-0 p-0" id="logo"></i>
+                                    <i class="bi bi-arrow-clockwise h2 text-secondary m-0 p-0" id="logo"></i>
                                 </div>
                             </div>
                         </div>
@@ -88,16 +101,20 @@
                         <div class="row h-75 w-100 bottom-0 p-0 m-0">
                             <div class="container h-100 w-100 m-0 p-0">
                                 <!-- Heading & description -->
-                                <p class="display-6 text-center fw-normal m-0 p-0">Forgot Password?</p>
-                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Enter your email address to get
-                                    instructions to reset your password.</p>
+                                <p class="display-6 text-center fw-normal m-0 p-0">Set new password</p>
+                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Avoid using easily guessable
+                                    information like birthdays or names. Make it strong and secure!</p>
                                 <!-- Form holder -->
                                 <div class="container w-100 h-50 px-4 mt-3">
                                     <!-- Form content -->
-                                    <form action="forgot-pass.php" method="post" id="email-form" autocomplete="off">
-                                        <input type="email" class="form-control" placeholder="name@segi4u.my" id="email"
-                                            name="email" pattern="[a-z].{0,}@segi\.edu\.my" required>
-                                        <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
+                                    <form action="forgot-pass.php" method="post" id="password-form" autocomplete="off">
+                                        <input type="password" class="form-control" id="password"
+                                            placeholder="Create new password" required>
+                                        <i class="bi bi-eye-slash-fill" id="show-pass-btn1"></i>
+                                        <input type="password" class="form-control mt-3" id="confirm-password"
+                                            placeholder="Confirm your password" required>
+                                        <i class="bi bi-eye-slash-fill" id="show-pass-btn2"></i>
+                                        <button class="btn btn-primary w-100 mt-3" type="submit">Reset password</button>
                                     </form>
                                     <!-- Back hypertext -->
                                     <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
@@ -120,51 +137,71 @@
         crossorigin="anonymous"></script>
     <!-- Functional script -->
     <script>
-        $(document).ready(function () {
-            // Set the page load to the respective page after refresh
-            if (sessionStorage.getItem("page-number") == 2) {
-                $("body").load("verification.html");
-            } else if (sessionStorage.getItem("page-number") == 3) {
-                $("body").load("reset-pass.html");
-            }
+        const showpassbtn1 = document.getElementById("show-pass-btn1");
+        const showpassbtn2 = document.getElementById("show-pass-btn2");
+        const password = document.getElementById("password");
+        const confirmpassword = document.getElementById("confirm-password");
 
+        // Change the eye icon if clicked
+        // For password
+        showpassbtn1.addEventListener("click", (e) => {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            const currentClass = e.target.classList.contains('bi-eye-slash-fill') ? 'bi-eye-slash-fill' : 'bi-eye-fill';
+            const newClass = currentClass === 'bi-eye-slash-fill' ? 'bi-eye-fill' : 'bi-eye-slash-fill';
+
+            e.target.classList.remove(currentClass);
+            e.target.classList.add(newClass);
+        });
+
+        // For confirm password
+        showpassbtn2.addEventListener("click", (e) => {
+            const type = confirmpassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmpassword.setAttribute('type', type);
+            const currentClass = e.target.classList.contains('bi-eye-slash-fill') ? 'bi-eye-slash-fill' : 'bi-eye-fill';
+            const newClass = currentClass === 'bi-eye-slash-fill' ? 'bi-eye-fill' : 'bi-eye-slash-fill';
+
+            e.target.classList.remove(currentClass);
+            e.target.classList.add(newClass);
+        });
+
+        $(document).ready(function () {
             // When the form submitted
-            $(document).on("submit", "#email-form", function (e) {
+            $(document).on("submit", "#password-form", function (e) {
                 e.preventDefault();  // Stop the webpage from refreshing
 
                 // The checkValidity() keep the original form validation in HTML5 under preventDefault()
                 if (this.checkValidity()) {
                     let submit = true;
-                    let email = $("#email").val();
+                    let password = $("#password").val();
+                    let confirmpassword = $("#confirm-password").val();
 
-                    $.ajax({
-                        type: "POST",
-                        url: "forgot-pass.php",
-                        data: {
-                            submit: submit,
-                            email: email
-                        },
-                        success: function (response) {
-                            // If forgot-pass.php returned "success"
-                            if (response == "success") {
-                                // Load the verification interface
-                                $("body").load("verification.html");
-                                sessionStorage.setItem("page-number", 2);
-                                sessionStorage.setItem("email", email);
-
-                                // Send verification code via email
-                                $.ajax({
-                                    type: "POST",
-                                    url: "mail.php"
-                                })
-                            } else {
-                                alert(response);  // Display the error messages
+                    if (password == confirmpassword) {
+                        // Update password
+                        $.ajax({
+                            type: "POST",
+                            url: "reset-pass.php",
+                            data: {
+                                submit: submit,
+                                password: password,
+                                email: sessionStorage.getItem("email")
+                            },
+                            success: function (response) {
+                                if (response == "success") {
+                                    alert("Password updated successfully.");
+                                    window.location.replace("login.html");
+                                } else {
+                                    alert(response);
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        alert("Password do not match.")
+                    }
                 } else {
-                    this.reportValidity(); // Display the original HTML5 validation messages
+                    this.reportValidity();  // Display the original HTML5 validation messages
                 }
+
             })
         })
     </script>

@@ -1,115 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+session_start();
+include("../include/database.php");
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPR System</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        #main-container {
-            display: flex;
-            align-items: center;
-            background-color: #F0F8FF;
-            overflow: hidden;
-        }
+if (isset($_POST["submit"])) {
+    $password = $_POST["password"];
+    $email = $_POST["email"];
+    $entity = $_SESSION["entity"];
 
-        #secondary-container {
-            display: flex;
-            justify-content: center;
-        }
+    // Update the password that corresponding to the email address
+    $update = "UPDATE $entity SET password = '$password' WHERE email = '$email'";
+    $result = mysqli_query($connection, $update);
 
-        #tertiary-container {
-            display: flex;
-            align-items: center;
-        }
-
-        #fourth-container {
-            display: flex;
-            justify-content: center;
-        }
-
-        #content-container {
-            width: 375px;
-        }
-
-        #main-logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        #secondary-logo-container {
-            display: flex;
-            justify-content: center;
-        }
-
-        #logo-holder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border: solid 2px #6c757d;
-            border-radius: 15px;
-        }
-
-        #hypertext-holder {
-            display: flex;
-            justify-content: center;
-        }
-
-        #hypertext {
-            text-decoration: none;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container-fluid position-absolute h-100 p-0" id="main-container">
-        <div class="row h-75 w-100 bg-transparent m-0" id="secondary-container">
-            <div class="col-sm-10 col-md-6 p-0 bg-transparent" id="tertiary-container">
-                <div class="row w-100 h-75 bg-transparent m-0 p-0" id="fourth-container">
-                    <div class="p-0 m-0" id="content-container">
-                        <!-- Logo holder -->
-                        <div class="row w-100 h-25 bg-transparent p-0 m-0" id="main-logo-container">
-                            <div class="row w-100 h-50 bg-transparent p-0 m-0" id="secondary-logo-container">
-                                <div class="container p-0 m-0" id="logo-holder">
-                                    <i class="bi bi-arrow-clockwise h2 text-secondary m-0 p-0" id="logo"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Content holder -->
-                        <div class="row h-75 w-100 bottom-0 p-0 m-0">
-                            <div class="container h-100 w-100 m-0 p-0">
-                                <!-- Heading & description -->
-                                <p class="display-6 text-center fw-normal m-0 p-0">Set new password</p>
-                                <p class="fs-6 text-center fw-normal m-0 mt-3 p-0">Avoid using easily guessable information like birthdays or names. Make it strong and secure!</p>
-                                <!-- Form holder -->
-                                <div class="container w-100 h-50 px-4 mt-3">
-                                    <!-- Form content -->
-                                    <form action="forgot-pass.php" method="post">
-                                        <input type="password" class="form-control" placeholder="Create new password" required>
-                                        <input type="password" class="form-control mt-3" placeholder="Confirm your password" required>
-                                        <button class="btn btn-primary w-100 mt-3" type="submit">Reset password</button>
-                                    </form>
-                                    <!-- Back hypertext -->
-                                    <div class="row w-100 p-0 m-0 bottom-0 mt-3 text-center" id="hypertext-holder">
-                                        <div class="col-6 m-0 p-0">
-                                            <a class="bi bi-arrow-left" href="login.html" id="hypertext">&nbsp;Back to Sign In</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
-
-</html>
+    if ($result) {
+        echo "success";
+    } else {
+        echo "Error updating password";
+    }
+}
+?>

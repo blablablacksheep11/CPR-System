@@ -21,15 +21,15 @@ if (isset($_POST["submit"])) {
         // If is lecturer and password correct
         if ((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] == $password)) {
             $_SESSION["entity"] = "lecturer";
-            echo "<script>window.location.href = '../lecturer/home.php'</script>";
+            echo "success_lecturer";
         }
         // If is program leader and password correct
         else if ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] == $password)) {
             $_SESSION["entity"] = "programleader";
-            echo "<script>window.location.href = '../programleader/home.php'</script>";
+            echo "success_programleader";
         }
         // If account founded but password incorrect
-        else if (((mysqli_num_rows($lecturer) > 0) || (mysqli_num_rows($programleader) > 0)) && (($lecturerinfo["password"] != $password) || ($programleaderinfo["password"] != $password))) {
+        else if (((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] != $password)) || ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] != $password))) {
             echo "Incorrect password";
         }
         //If account doesn't existed
@@ -40,4 +40,3 @@ if (isset($_POST["submit"])) {
         echo "Invalid email address.";
     }
 }
-?>
