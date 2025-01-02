@@ -58,7 +58,9 @@
                 <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container" id="content-holder"></div>
+                <div class="container" id="content-holder">
+                    lecturer
+                </div>
             </div>
         </div>
     </div>

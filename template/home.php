@@ -13,8 +13,8 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         #top-navbar {
-            min-height: 79px;
-            max-height: 79px;
+            min-height: 80px;
+            max-height: 80px;
             background-color: transparent;
         }
 
@@ -23,10 +23,6 @@
             max-width: 256px;
             background-color: transparent;
             /*background-color: #f8f9fa;*/
-        }
-
-        #content-container {
-            height: 90vh;
         }
 
         /* The container is not 100% width under full screen width */
@@ -58,21 +54,21 @@
                 <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container" id="content-holder"></div>
+                <div class="container bg-danger" id="content-holder"></div>
             </div>
         </div>
     </div>
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Functional script -->
     <script>
         $(document).ready(function() {
             // Load top navbar content
-            $('#top-navbar').load('../program_leader/top-navbar.html');
+            $('#top-navbar').load('top-navbar.html');
             // Load side navbar content
-            $('#side-navbar').load('../program_leader/side-navbar.html');
+            $('#side-navbar').load('side-navbar.html');
         })
     </script>
-    <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
