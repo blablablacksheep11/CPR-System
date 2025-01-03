@@ -33,6 +33,10 @@
             font-size: 0.6rem;
         }
 
+        #content-container {
+            height: 90vh;
+        }
+
         #btn-holder {
             width: 90%;
         }
@@ -44,15 +48,8 @@
     <div class="row m-0 p-0" id="btn-holder">
         <ul class="nav flex-column w-100 mt-2 p-0">
             <li class="nav-item w-100 m-0 p-0">
-                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center" href="home.php">
-                    &nbsp;&nbsp;&nbsp;
-                    <i class="bi bi-house"></i>
-                    <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Home</p>
-                </a>
-            </li>
-
-            <li class="nav-item w-100 m-0 p-0">
-                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="user">
+                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#user" role="button" aria-expanded="false" aria-controls="user">
                     <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
                     <i class="bi bi-people"></i>
                     <p class="text-start ms-2 m-0 p-0 d-none d-md-block">User</p>
@@ -67,8 +64,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button"
-                            href="user-lecturer.php">
+                        <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
                             &nbsp;&nbsp;&nbsp;&nbsp;Lecturer
                         </a>
                     </li>
@@ -76,7 +72,8 @@
             </div>
 
             <li class="nav-item w-100 m-0 p-0">
-                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="course">
+                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#course" role="button" aria-expanded="false" aria-controls="course">
                     <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
                     <i class="bi bi-book"></i>
                     <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Courses</p>
@@ -99,23 +96,23 @@
             </div>
 
             <li class="nav-item w-100 m-0 p-0">
-                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="grade">
+                <a class="btn w-100 nav-btn link-secondary d-flex align-items-center" data-bs-toggle="collapse"
+                    href="#grade" role="button" aria-expanded="false" aria-controls="grade">
                     <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
                     <i class="bi bi-clipboard"></i>
                     <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Grades</p>
                 </a>
             </li>
-            <!-- Only visible when 'Grades' btn clicked -->
             <div class="collapse" id="grade">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;View
+                            &nbsp;&nbsp;&nbsp;&nbsp;Create new
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Edit
+                            &nbsp;&nbsp;&nbsp;&nbsp;List
                         </a>
                     </li>
                 </ul>
@@ -123,6 +120,10 @@
         </ul>
     </div>
 
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <!-- Functional script -->
     <script>
         const caretbtn = document.getElementsByClassName("nav-btn");
@@ -145,25 +146,7 @@
                 }
             });
         }
-
-        const navbtn = document.getElementsByClassName("primary-btn");
-        for (let i = 0; i < navbtn.length; i++) {
-            navbtn[i].addEventListener("click", function (e) {
-                var collapseElement = e.target.getAttribute('value');
-                var collapseItem = document.getElementById(collapseElement);
-                if (collapseItem.classList.contains("show")) {
-                    collapseItem.classList.remove("show"); // Hide
-                } else {
-                    collapseItem.classList.add("show"); // Show
-                }
-            });
-        }
-
     </script>
-    <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

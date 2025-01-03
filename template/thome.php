@@ -25,6 +25,10 @@
             /*background-color: #f8f9fa;*/
         }
 
+        #content-container {
+            height: 90vh;
+        }
+
         /* The container is not 100% width under full screen width */
         #content-holder {
             width: calc(100% - 256px);
@@ -54,7 +58,7 @@
                 <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container bg-danger" id="content-holder"></div>
+                <div class="container" id="content-holder"></div>
             </div>
         </div>
     </div>
@@ -64,9 +68,9 @@
     <script>
         $(document).ready(function() {
             // Load top navbar content
-            $('#top-navbar').load('top-navbar.html');
+            $('#top-navbar').load('../template/ttop-navbar.html');
             // Load side navbar content
-            $('#side-navbar').load('side-navbar.html');
+            $('#side-navbar').load('../template/tside-navbar.html');
         })
     </script>
 </body>

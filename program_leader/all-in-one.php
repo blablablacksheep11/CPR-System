@@ -117,7 +117,7 @@
                                 </a>
                             </li>
                             <!-- Only visible when 'User' btn clicked -->
-                            <div class="collapse navbar-collpase" id="user">
+                            <div class="collapse navbar-collapse" id="user">
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
                                         <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
@@ -141,7 +141,7 @@
                                 </a>
                             </li>
                             <!-- Only visible when 'Courses' btn clicked -->
-                            <div class="collapse navbar-collpase" id="course">
+                            <div class="collapse navbar-collapse" id="course">
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
                                         <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
@@ -165,7 +165,7 @@
                                 </a>
                             </li>
                             <!-- Only visible when 'Courses' btn clicked -->
-                            <div class="collapse navbar-collpase" id="grade">
+                            <div class="collapse navbar-collapse" id="grade">
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
                                         <a class="btn w-100 text-start nav-btn link-secondary ps-5" role="button">
@@ -183,7 +183,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="container bg-danger" id="content-holder"></div>
+                <div class="container" id="content-holder"></div>
             </div>
         </div>
     </div>
