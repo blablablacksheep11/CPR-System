@@ -47,15 +47,15 @@
                 <a class="btn w-100 nav-btn link-secondary d-flex align-items-center" href="home.php">
                     &nbsp;&nbsp;&nbsp;
                     <i class="bi bi-house"></i>
-                    <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Home</p>
+                    <p class="text-start ms-2 m-0 p-0">Home</p>
                 </a>
             </li>
 
             <li class="nav-item w-100 m-0 p-0">
                 <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="user">
-                    <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
+                    <i class="bi bi-caret-right-fill me-1"></i>
                     <i class="bi bi-people"></i>
-                    <p class="text-start ms-2 m-0 p-0 d-none d-md-block">User</p>
+                    <p class="text-start ms-2 m-0 p-0">User</p>
                 </a>
             </li>
             <!-- Only visible when 'User' btn clicked -->
@@ -77,9 +77,9 @@
 
             <li class="nav-item w-100 m-0 p-0">
                 <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="course">
-                    <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
+                    <i class="bi bi-caret-right-fill me-1"></i>
                     <i class="bi bi-book"></i>
-                    <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Courses</p>
+                    <p class="text-start ms-2 m-0 p-0">Courses</p>
                 </a>
             </li>
             <!-- Only visible when 'Courses' btn clicked -->
@@ -100,9 +100,9 @@
 
             <li class="nav-item w-100 m-0 p-0">
                 <a class="btn w-100 nav-btn link-secondary d-flex align-items-center primary-btn" value="grade">
-                    <i class="bi bi-caret-right-fill me-1 d-none d-md-block"></i>
+                    <i class="bi bi-caret-right-fill me-1"></i>
                     <i class="bi bi-clipboard"></i>
-                    <p class="text-start ms-2 m-0 p-0 d-none d-md-block">Grades</p>
+                    <p class="text-start ms-2 m-0 p-0">Grades</p>
                 </a>
             </li>
             <!-- Only visible when 'Grades' btn clicked -->
@@ -149,8 +149,8 @@
         const navbtn = document.getElementsByClassName("primary-btn");
         for (let i = 0; i < navbtn.length; i++) {
             navbtn[i].addEventListener("click", function (e) {
-                var collapseElement = e.target.getAttribute('value');
-                var collapseItem = document.getElementById(collapseElement);
+                let collapseElement = e.target.getAttribute('value');
+                let collapseItem = document.getElementById(collapseElement);
                 if (collapseItem.classList.contains("show")) {
                     collapseItem.classList.remove("show"); // Hide
                 } else {

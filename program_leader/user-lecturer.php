@@ -26,7 +26,7 @@
         }
 
         #content-container {
-            height: 90vh;
+            height: calc(100% - 79px);
         }
 
         /* The container is not 100% width under full screen width */
@@ -38,6 +38,10 @@
         /* The container will be 100% width when screen width falls under lg */
         @media (max-width: 992px) {
             #content-holder {
+                width: 100%;
+            }
+
+            #side-navbar {
                 width: 100%;
             }
         }
@@ -55,7 +59,7 @@
             <!-- Container for side navbar and content -->
             <div class="row m-0 p-0" id="content-container">
                 <!-- Side navabr -->
-                <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
+                <div class="border-end border-2 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
                 <div class="container" id="content-holder">

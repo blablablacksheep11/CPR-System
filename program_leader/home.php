@@ -26,7 +26,8 @@
         }
 
         #content-container {
-            height: 90vh;
+            height: calc(100% - 79px);
+            overflow: hidden;
         }
 
         /* The container is not 100% width under full screen width */
@@ -55,10 +56,10 @@
             <!-- Container for side navbar and content -->
             <div class="row m-0 p-0" id="content-container">
                 <!-- Side navabr -->
-                <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
+                <div class="border-end border-2 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container" id="content-holder"></div>
+                <div class="container bg-danger h-100 m-0 p-0" id="content-holder"></div>
             </div>
         </div>
     </div>
