@@ -46,10 +46,13 @@
 <body>
     <!-- Logo holder -->
     <div class="m-0 p-0 d-flex align-items-center justify-content-left justify-content-lg-center" id="logo-holder">
-        <a class="btn link-secondary d-flex d-lg-none align-items-center ms-2" value="side-navbar"
-            id="burger-btn">
+        <!-- Hamburger menu -->
+        <!-- The hamburger menu only visible when screen width falls below lg -->
+        <!-- The hamburger menu btn doesn't include class 'nav-btn' and 'primary-btn' like those in side-navbar.html to prevent CSS and JS conflicts -->
+        <a class="btn link-secondary d-flex d-lg-none align-items-center ms-2" value="side-navbar" id="burger-btn">
             <i class="bi bi-list fs-3"></i>
         </a>
+        <!-- SEGi logo -->
         <!-- Only visible at lg or above -->
         <img class="img-fluid d-none d-lg-block" src="../media/scpg-logo-transparent.png" alt="SEGi College Penang"
             id="logo-full">
@@ -59,6 +62,7 @@
     </div>
 
     <!-- Functional script -->
+    <!-- This script is specially defined to prevent js conflict with side-navbar.html -->
     <script>
         const burgerbtn = document.getElementById("burger-btn");
 
@@ -70,7 +74,7 @@
                 collapseItem.style.display = "none";
             } else {
                 collapseItem.classList.add("show"); // Show
-                collapseItem.style.display = "flex";
+                collapseItem.style.display = "flex"; // Enable the justify-content-center
             }
         });
     </script>

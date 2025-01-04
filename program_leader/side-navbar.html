@@ -125,6 +125,7 @@
 
     <!-- Functional script -->
     <script>
+        // Changing the direction of caret
         const caretbtn = document.getElementsByClassName("nav-btn");
         const icons = document.getElementsByClassName("bi-caret-right-fill");
 
@@ -146,6 +147,7 @@
             });
         }
 
+        // Control the collapse status
         const navbtn = document.getElementsByClassName("primary-btn");
         for (let i = 0; i < navbtn.length; i++) {
             navbtn[i].addEventListener("click", function (e) {

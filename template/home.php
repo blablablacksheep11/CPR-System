@@ -27,14 +27,18 @@
         #content-holder {
             width: calc(100% - 256px);
             overflow: auto;
+            background-color: #f8f9fa;
         }
 
-        /* The container will be 100% width when screen width falls under lg */
         @media (max-width: 991px) {
+
+            /* The container will be 100% width when screen width falls under lg */
             #content-holder {
                 width: 100%;
             }
 
+            /* The side navbar will be 100% width when screen width falls under lg */
+            /* The side navbar is hidden in default when screen width falls under lg */
             #side-navbar {
                 min-width: 100%;
                 max-width: 100%;
@@ -42,6 +46,8 @@
         }
 
         @media (min-width: 992px) {
+
+            /* The side navbar will be 256px width when screen width go above lg */
             #side-navbar {
                 min-width: 256px;
                 max-width: 256px;
@@ -56,17 +62,18 @@
     <div class="container-fluid position-absolute h-100 p-0 m-0" id="main-container">
         <div class="row h-100 m-0 p-0">
             <!-- Top navbar -->
-            <div class="row border-bottom border-2 m-0 p-0" id="top-navbar">
+            <div class="row border-bottom border-1 m-0 p-0" id="top-navbar">
                 <!-- Content in top-navbar.html will be loaded here -->
             </div>
 
             <!-- Container for side navbar and content -->
             <div class="row m-0 p-0" id="content-container">
                 <!-- Side navabr -->
-                <div class="border-end border-2 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
+                <!-- The side navabr collapse in default(display:none), and will only visible(display:flex) when screen width go above lg -->
+                <div class="border-end border-1 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container bg-danger h-100 m-0 p-0" id="content-holder"></div>
+                <div class="container h-100 m-0 p-0" id="content-holder"></div>
             </div>
         </div>
     </div>
@@ -77,6 +84,8 @@
             $('#top-navbar').load('../program_leader/top-navbar.html');
             // Load side navbar content
             $('#side-navbar').load('../program_leader/side-navbar.html');
+
+            // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
         })
     </script>
     <!-- Bootstrap CSS -->
