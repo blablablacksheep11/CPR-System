@@ -13,20 +13,14 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         #top-navbar {
-            min-height: 80px;
-            max-height: 80px;
+            min-height: 79px;
+            max-height: 79px;
             background-color: transparent;
-        }
-
-        #side-navbar {
-            min-width: 256px;
-            max-width: 256px;
-            background-color: transparent;
-            /*background-color: #f8f9fa;*/
         }
 
         #content-container {
-            height: 90vh;
+            height: calc(100% - 79px);
+            overflow: hidden;
         }
 
         /* The container is not 100% width under full screen width */
@@ -36,9 +30,23 @@
         }
 
         /* The container will be 100% width when screen width falls under lg */
-        @media (max-width: 992px) {
+        @media (max-width: 991px) {
             #content-holder {
                 width: 100%;
+            }
+
+            #side-navbar {
+                min-width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            #side-navbar {
+                min-width: 256px;
+                max-width: 256px;
+                background-color: transparent;
+                /*background-color: #f8f9fa;*/
             }
         }
     </style>
@@ -55,24 +63,24 @@
             <!-- Container for side navbar and content -->
             <div class="row m-0 p-0" id="content-container">
                 <!-- Side navabr -->
-                <div class="border-end border-2 m-0 p-0 d-none d-lg-flex justify-content-center" id="side-navbar">
+                <div class="border-end border-2 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container" id="content-holder"></div>
+                <div class="container bg-danger h-100 m-0 p-0" id="content-holder"></div>
             </div>
         </div>
     </div>
-    <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Functional script -->
     <script>
         $(document).ready(function() {
             // Load top navbar content
-            $('#top-navbar').load('../template/ttop-navbar.html');
+            $('#top-navbar').load('../program_leader/top-navbar.html');
             // Load side navbar content
-            $('#side-navbar').load('../template/tside-navbar.html');
+            $('#side-navbar').load('../program_leader/side-navbar.html');
         })
     </script>
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
