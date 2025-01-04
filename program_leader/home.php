@@ -18,13 +18,6 @@
             background-color: transparent;
         }
 
-        #side-navbar {
-            min-width: 256px;
-            max-width: 256px;
-            background-color: transparent;
-            /*background-color: #f8f9fa;*/
-        }
-
         #content-container {
             height: calc(100% - 79px);
             overflow: hidden;
@@ -37,9 +30,23 @@
         }
 
         /* The container will be 100% width when screen width falls under lg */
-        @media (max-width: 992px) {
+        @media (max-width: 991px) {
             #content-holder {
                 width: 100%;
+            }
+
+            #side-navbar {
+                min-width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            #side-navbar {
+                min-width: 256px;
+                max-width: 256px;
+                background-color: transparent;
+                /*background-color: #f8f9fa;*/
             }
         }
     </style>

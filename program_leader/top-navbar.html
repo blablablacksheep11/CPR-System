@@ -67,8 +67,10 @@
             let collapseItem = document.getElementById(collapseElement);
             if (collapseItem.classList.contains("show")) {
                 collapseItem.classList.remove("show"); // Hide
+                collapseItem.style.display = "none";
             } else {
                 collapseItem.classList.add("show"); // Show
+                collapseItem.style.display = "flex";
             }
         });
     </script>
