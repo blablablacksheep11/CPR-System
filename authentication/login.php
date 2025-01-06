@@ -20,11 +20,13 @@ if (isset($_POST["submit"])) {
 
         // If is lecturer and password correct
         if ((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] == $password)) {
+            $_SESSION["department"] = $lecturerinfo['department'];
             $_SESSION["entity"] = "lecturer";
             echo "success_lecturer";
         }
         // If is program leader and password correct
         else if ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] == $password)) {
+            $_SESSION["department"] = $programleaderinfo['department'];
             $_SESSION["entity"] = "programleader";
             echo "success_programleader";
         }

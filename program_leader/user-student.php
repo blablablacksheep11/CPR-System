@@ -114,10 +114,10 @@ include('../include/database.php');
                                     <nav class="ps-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item active">People</li>
-                                            <li class="breadcrumb-item active"><a href="user-lecturer.php">Lecturer</a></li>
+                                            <li class="breadcrumb-item active"><a href="user-student.php">Student</a></li>
                                         </ol>
                                     </nav>
-                                    <h2 class="m-0 ps-4">Lecturer</h2>
+                                    <h2 class="m-0 ps-4">Student</h2>
                                 </div>
                                 <div class="row w-100 h-50 m-0 p-0 d-flex align-items-center">
                                     <form>
@@ -140,15 +140,50 @@ include('../include/database.php');
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
+                                            <th scope="col">ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Position</th>
-                                            <th scope="col">Type</th>
+                                            <th scope="col">Intake</th>
+                                            <th scope="col">Programme</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Lecturer list will be loaded here -->
+                                        <!-- Fetch the student data from database -->
+                                        <?php
+                                        $counter = 1;
+                                        $student = 'SELECT * FROM student WHERE department = "' . $_SESSION['department'] . '" ORDER BY name';
+                                        $result = mysqli_query($connection, $student);
+                                        while ($studentinfo = mysqli_fetch_assoc($result)) {
+                                        ?>
+                                            <tr>
+                                                <th class="py-3" scope="row"><?php echo $counter; ?></th>
+                                                <td class="py-3"><?php echo $studentinfo['student_id']; ?></td>
+                                                <td class="py-3"><?php echo $studentinfo['name'];
+                                                                    if ($studentinfo['gender'] == 'male') { ?>
+                                                        <i class="bi bi-gender-male ps-1"></i>
+                                                    <?php } else { ?>
+                                                        <i class="bi bi-gender-female ps-1"></i>
+                                                    <?php } ?>
+                                                </td>
+                                                <td class="py-3"><?php echo $studentinfo['email']; ?></td>
+                                                <td class="py-3"><?php echo $studentinfo['intake']; ?></td>
+                                                <td class="py-3"><?php $programme = 'SELECT name FROM programme WHERE code = "' . $studentinfo['programme'] . '"';
+                                                                    $fetch = mysqli_query($connection, $programme);
+                                                                    $programmename = mysqli_fetch_assoc($fetch);
+                                                                    echo $programmename['name']; ?></td>
+                                                <td class="py-3">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option value="<?php echo $studentinfo['id']; ?>" selected>View</option>
+                                                        <option value="<?php echo $studentinfo['id']; ?>">Edit</option>
+                                                        <option value="<?php echo $studentinfo['id']; ?>">Delete</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                            $counter++;
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -165,61 +200,8 @@ include('../include/database.php');
             $('#top-navbar').load('../program_leader/top-navbar.html');
             // Load side navbar content
             $('#side-navbar').load('../program_leader/side-navbar.html');
+
             // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
-
-            // Load lecturer list
-            $('tbody').load('../program_leader/load-lecturer.php');
-
-            // Search bar functionality
-            $(document).on('input', '#searchbar-input', function(e) {
-                e.preventDefault();
-                const query = $(this).val();
-
-                if (query.length > 0) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '../program_leader/search-lecturer.php',
-                        data: {
-                            query: query
-                        },
-                        success: function(response) {
-                            if (response == 'Unsuccessful') {
-                                const failedmessage = document.createElement('tr');
-                                failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                                $('tbody').html(failedmessage);
-                            } else {
-                                if (response == 'empty') {
-                                    const emptymessage = document.createElement('tr');
-                                    emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
-                                    $('tbody').html(emptymessage);
-                                } else {
-                                    let counter = 1;
-                                    $('tbody').html(
-                                        response.map(function(row) {
-                                            return `<tr>
-                                                    <th class='py-3' scope='row'>${counter++}</th>;
-                                                    <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
-                                                    <td class='py-3'>${row.email}</td>
-                                                    <td class='py-3'>${row.position}</td>
-                                                    <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
-                                                    <td class="py-3">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option value="${row.id}" selected>View</option>
-                                                            <option value="${row.id}">Edit</option>
-                                                            <option value="${row.id}">Delete</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>`;
-                                        }))
-                                }
-                            }
-                        }
-                    })
-                } else {
-                    // Load lecturer list
-                    $('tbody').load('../program_leader/load-lecturer.php');
-                }
-            })
         })
     </script>
     <!-- Bootstrap CSS -->

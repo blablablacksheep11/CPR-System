@@ -73,7 +73,9 @@
                 <div class="border-end border-1 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
-                <div class="container h-100 m-0 p-0" id="content-holder"></div>
+                <!-- Main content of the page will be loaded here -->
+                <div class="container h-100 m-0 p-0" id="content-holder">
+                </div>
             </div>
         </div>
     </div>
