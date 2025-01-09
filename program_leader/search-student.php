@@ -5,7 +5,7 @@ include('../include/database.php');
 if (isset($_POST['search'])) {
     $query = $_POST['query'];
 
-    $search = "SELECT * FROM lecturer WHERE (name LIKE '%$query%' OR email LIKE '%$query%') AND department = '" . $_SESSION['department'] . "' ORDER BY name";
+    $search = "SELECT * FROM student WHERE (student_id LIKE '%$query%' OR name LIKE '%$query%' OR email LIKE '%$query%') AND department = '" . $_SESSION['department'] . "' ORDER BY name";
     $result = mysqli_query($connection, $search);
 
     if ($result) {
@@ -14,6 +14,10 @@ if (isset($_POST['search'])) {
         } else {
             $data = [];
             while ($row = mysqli_fetch_assoc($result)) {
+                $programme = "SELECT name FROM programme WHERE code = '" . $row['programme'] . "'";
+                $fetch = mysqli_query($connection, $programme);
+                $programmename = mysqli_fetch_assoc($fetch);
+                $row["programme"] = $programmename['name'];
                 $data[] = $row;
             }
             header('Content-Type: application/json');
@@ -25,7 +29,7 @@ if (isset($_POST['search'])) {
 } else if (isset($_POST['sort'])) {
     $query = $_POST['query'];
 
-    $sort = "SELECT * FROM lecturer WHERE department = '" . $_SESSION['department'] . "' ORDER BY $query";
+    $sort = "SELECT * FROM student WHERE department = '" . $_SESSION['department'] . "' ORDER BY $query, name";
     $result = mysqli_query($connection, $sort);
 
     if ($result) {
@@ -34,6 +38,10 @@ if (isset($_POST['search'])) {
         } else {
             $data = [];
             while ($row = mysqli_fetch_assoc($result)) {
+                $programme = "SELECT name FROM programme WHERE code = '" . $row['programme'] . "'";
+                $fetch = mysqli_query($connection, $programme);
+                $programmename = mysqli_fetch_assoc($fetch);
+                $row["programme"] = $programmename['name'];
                 $data[] = $row;
             }
             header('Content-Type: application/json');
@@ -45,7 +53,7 @@ if (isset($_POST['search'])) {
 } else if (isset($_POST['filter'])) {
     $query = $_POST['data'];
     $size = count($query);
-    $filter = "SELECT * FROM lecturer WHERE ";
+    $filter = "SELECT * FROM student WHERE ";
     $conditions = "";
 
     foreach ($query as $condition) {
@@ -63,6 +71,10 @@ if (isset($_POST['search'])) {
         } else {
             $data = [];
             while ($row = mysqli_fetch_assoc($result)) {
+                $programme = "SELECT name FROM programme WHERE code = '" . $row['programme'] . "'";
+                $fetch = mysqli_query($connection, $programme);
+                $programmename = mysqli_fetch_assoc($fetch);
+                $row["programme"] = $programmename['name'];
                 $data[] = $row;
             }
             header('Content-Type: application/json');

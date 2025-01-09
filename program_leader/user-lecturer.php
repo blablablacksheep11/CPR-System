@@ -86,11 +86,15 @@ include('../include/database.php');
             min-height: 80%;
             max-height: fit-content;
         }
+
+        #dropdown-menu {
+            width: 300px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid position-absolute h-100 p-0 m-0" id="main-container">
+    <div class="container-fluid position-absolute h-100 p-0 m-0 overflow-hidden" id="main-container">
         <div class="row h-100 m-0 p-0">
             <!-- Top navbar -->
             <div class="row border-bottom border-1 m-0 p-0" id="top-navbar">
@@ -111,7 +115,7 @@ include('../include/database.php');
                         <div class="row m-0 p-0" id="searchbar-container">
                             <div class="col-8 p-0 m-0">
                                 <div class="row w-100 h-50 m-0 p-0 d-flex">
-                                    <nav class="ps-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                                    <nav class="pt-1 ps-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item active">People</li>
                                             <li class="breadcrumb-item active"><a href="user-lecturer.php">Lecturer</a></li>
@@ -129,6 +133,116 @@ include('../include/database.php');
                                             <input type="text" class="form-control m-0 ps-0" placeholder="Search" id="searchbar-input">
                                         </div>
                                     </form>
+                                </div>
+                            </div>
+                            <div class="col-4 p-0 m-0 d-flex align-items-end">
+                                <div class="row w-100 h-50 p-0 m-0 d-flex align-items-center justify-content-evenly justify-content-xl-center">
+                                    <div class="col-6 col-md-5 p-0 me-xl-1 m-0 d-flex align-items-center justify-content-end">
+                                        <i class="bi bi-sort-down fs-5 me-1 d-none d-md-block"></i>
+                                        <!-- Sort dropdown -->
+                                        <div class="dropdown">
+                                            <button class="btn bg-white border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Sort
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="name">Name: A to Z</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="name DESC">Name: Z to A</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="email">Email: A to Z</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="email DESC">Email: Z to A</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-4 p-0 m-0 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-funnel fs-5 me-1 d-none d-md-block"></i>
+                                        <!-- Filter dropdown -->
+                                        <div class="dropdown">
+                                            <button class="btn bg-white border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Filter
+                                            </button>
+                                            <div class="dropdown-menu p-3" id="dropdown-menu">
+                                                <form autocomplete="off" id="filter-form">
+                                                    <!-- Name filtration-->
+                                                    <label class="form-label text-secondary m-0 mb-1">Name</label>
+                                                    <div class="m-0 p-0 d-flex justify-content-start">
+                                                        <div class="me-3">
+                                                            <label for="name-start" class="form-label m-0">Start with:</label>
+                                                            <input type="text" class="form-control" id="name-start">
+                                                        </div>
+                                                        <div>
+                                                            <label for="name-end" class="form-label m-0">End with:</label>
+                                                            <input type="text" class="form-control" id="name-end">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Gender filtration-->
+                                                    <div class="mt-2 m-0 d-flex justify-content-start">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender" id="male-radio" value="male">
+                                                            <label class="form-check-label" for="male-radio">
+                                                                Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check ms-3">
+                                                            <input class="form-check-input" type="radio" name="gender" id="female-radio" value="female">
+                                                            <label class="form-check-label" for="female-radio">
+                                                                Female
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Email filtration-->
+                                                    <label class="form-label text-secondary m-0 mt-2 mb-1">Email</label>
+                                                    <div class="m-0 p-0 d-flex justify-content-start">
+                                                        <div class="me-3">
+                                                            <label for="email-start" class="form-label m-0">Start with:</label>
+                                                            <input type="text" class="form-control" id="email-start">
+                                                        </div>
+                                                        <div>
+                                                            <label for="email-end" class="form-label m-0">End with:</label>
+                                                            <input type="text" class="form-control" id="email-end">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Position filtration-->
+                                                    <label for="position" class="form-label text-secondary mt-2 m-0">Position</label>
+                                                    <select class="form-select" id="position">
+                                                        <option selected disabled hidden>Position</option>
+                                                        <?php
+                                                        $position = "SELECT DISTINCT position FROM lecturer WHERE department = '" . $_SESSION['department'] . "'";
+                                                        $result = mysqli_query($connection, $position);
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            echo "<option value='" . $row['position'] . "'>" . $row['position'] . "</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
+
+                                                    <!-- Type filtration-->
+                                                    <label for="type" class="form-label text-secondary mt-2 m-0">Type</label>
+                                                    <select class="form-select" id="type">
+                                                        <option selected disabled hidden>Type</option>
+                                                        <?php
+                                                        $type = "SELECT DISTINCT type FROM lecturer WHERE department = '" . $_SESSION['department'] . "'";
+                                                        $result = mysqli_query($connection, $type);
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            if ($row['type'] == 'FT') {
+                                                                echo "<option value='" . $row['type'] . "'>Full Time</option>";
+                                                            } elseif ($row['type'] == 'PT') {
+                                                                echo "<option value='" . $row['type'] . "'>Part Time</option>";
+                                                            } else {
+                                                                echo "<option value='" . $row['type'] . "'>" . $row['type'] . "</option>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <div class="mt-3 d-flex justify-content-end">
+                                                        <input type="reset" class="btn btn-outline-dark me-2">
+                                                        <input type="submit" class="btn btn-primary" id="filter-submit" value="Apply">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -180,6 +294,7 @@ include('../include/database.php');
                         type: 'POST',
                         url: '../program_leader/search-lecturer.php',
                         data: {
+                            search: 'search',
                             query: query
                         },
                         success: function(response) {
@@ -219,6 +334,140 @@ include('../include/database.php');
                     // Load lecturer list
                     $('tbody').load('../program_leader/load-lecturer.php');
                 }
+            })
+
+            $(document).on("click", ".sort-option", function(e) {
+                e.preventDefault();
+                const query = $(this).data('value');
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/search-lecturer.php",
+                    data: {
+                        sort: "sort",
+                        query: query
+                    },
+                    success: function(response) {
+                        if (response == 'Unsuccessful') {
+                            const failedmessage = document.createElement('tr');
+                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
+                            $('tbody').html(failedmessage);
+                        } else {
+                            if (response == 'empty') {
+                                const emptymessage = document.createElement('tr');
+                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
+                                $('tbody').html(emptymessage);
+                            } else {
+                                let counter = 1;
+                                $('tbody').html(
+                                    response.map(function(row) {
+                                        return `<tr>
+                                                    <th class='py-3' scope='row'>${counter++}</th>;
+                                                    <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
+                                                    <td class='py-3'>${row.email}</td>
+                                                    <td class='py-3'>${row.position}</td>
+                                                    <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
+                                                    <td class="py-3">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option value="${row.id}" selected>View</option>
+                                                            <option value="${row.id}">Edit</option>
+                                                            <option value="${row.id}">Delete</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>`;
+                                    }))
+                            }
+                        }
+                    }
+                })
+            })
+
+            $(document).on("click", "#filter-submit", function(e) {
+                e.preventDefault();
+                let data = [];
+                // Get the value for name start with ....
+                const query1 = $('#name-start').val();
+                if (query1) {
+                    const namestart = `name LIKE '${query1}%'`;
+                    data.push(namestart);
+                }
+                // Get the value for name end with ....
+                const query2 = $('#name-end').val();
+                if (query2) {
+                    const nameend = `name LIKE '%${query2}'`;
+                    data.push(nameend);
+                }
+                // Get the value of gender
+                const query3 = $('input[name="gender"]:checked').val();
+                if (query3) {
+                    const gender = `gender = '${query3}'`;
+                    data.push(gender);
+                }
+                // Get the value for email start with ....
+                const query4 = $('#email-start').val();
+                if (query4) {
+                    const emailstart = `email LIKE '${query4}%'`;
+                    data.push(emailstart);
+                }
+                // Get the value for email end with ....
+                const query5 = $('#email-end').val();
+                if (query5) {
+                    const emailend = `email LIKE '%${query5}'`;
+                    data.push(emailend);
+                }
+                const query6 = $('#position').val();
+                if (query6) {
+                    const position = `position = '${query6}'`;
+                    data.push(position);
+                }
+                const query7 = $('#type').val();
+                if (query7) {
+                    const type = `type = '${query7}'`;
+                    data.push(type);
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/search-lecturer.php",
+                    data: {
+                        filter: "filter",
+                        data: data
+                    },
+                    success: function(response) {
+                        $('#filter-form')[0].reset();
+                        $('#dropdown-menu').removeClass('show');
+                        if (response == 'Unsuccessful') {
+                            const failedmessage = document.createElement('tr');
+                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
+                            $('tbody').html(failedmessage);
+                        } else {
+                            if (response == 'empty') {
+                                const emptymessage = document.createElement('tr');
+                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
+                                $('tbody').html(emptymessage);
+                            } else {
+                                let counter = 1;
+                                $('tbody').html(
+                                    response.map(function(row) {
+                                        return `<tr>
+                                                    <th class='py-3' scope='row'>${counter++}</th>;
+                                                    <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
+                                                    <td class='py-3'>${row.email}</td>
+                                                    <td class='py-3'>${row.position}</td>
+                                                    <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
+                                                    <td class="py-3">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option value="${row.id}" selected>View</option>
+                                                            <option value="${row.id}">Edit</option>
+                                                            <option value="${row.id}">Delete</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>`;
+                                    }))
+                            }
+                        }
+                    }
+                })
             })
         })
     </script>
