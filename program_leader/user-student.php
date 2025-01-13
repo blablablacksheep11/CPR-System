@@ -33,13 +33,11 @@ include('../include/database.php');
 
         #content-container {
             min-height: calc(100% - 79px);
-            overflow: hidden;
         }
 
         /* The container is not 100% width under full screen width */
         #content-holder {
             width: calc(100% - 256px);
-            overflow: auto;
             background-color: rgb(240, 241, 246);
         }
 
@@ -70,7 +68,7 @@ include('../include/database.php');
         }
 
         #searchbar-container {
-            height: 20%;
+            height: 140px;
         }
 
         #searchbar-input {
@@ -83,7 +81,7 @@ include('../include/database.php');
         }
 
         #table-container {
-            min-height: 80%;
+            min-height: calc(100% - 140px);
             max-height: fit-content;
         }
 
@@ -102,15 +100,15 @@ include('../include/database.php');
             </div>
 
             <!-- Container for side navbar and content -->
-            <div class="row m-0 p-0" id="content-container">
+            <div class="row m-0 p-0 overflow-hidden" id="content-container">
                 <!-- Side navabr -->
                 <!-- The side navabr collapse in default(display:none), and will only visible(display:flex) when screen width go above lg -->
                 <div class="border-end border-1 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
                 <!-- Main content of the page will be loaded here -->
-                <div class="container h-100 m-0 p-0" id="content-holder">
-                    <div class="row h-100 m-0 p-0 overflow-auto">
+                <div class="container h-100 m-0 p-0 overflow-hidden" id="content-holder">
+                    <div class="row h-100 m-0 p-0 overflow-hidden">
                         <!-- Row to carry search bar -->
                         <div class="row m-0 p-0" id="searchbar-container">
                             <div class="col-8 p-0 m-0">
@@ -227,13 +225,10 @@ include('../include/database.php');
                                                     <select class="form-select" id="programme">
                                                         <option selected disabled hidden>Programme</option>
                                                         <?php
-                                                        $programme = "SELECT DISTINCT programme FROM student WHERE department = '" . $_SESSION['department'] . "'";
+                                                        $programme = "SELECT * FROM programme WHERE department = '" . $_SESSION['department'] . "'";
                                                         $result = mysqli_query($connection, $programme);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            $programme = "SELECT name FROM programme WHERE code = '" . $row['programme'] . "'";
-                                                            $result2 = mysqli_query($connection, $programme);
-                                                            $programmename = mysqli_fetch_assoc($result2);
-                                                            echo "<option value='" . $row['programme'] . "'>" . $programmename['name'] . "</option>";
+                                                            echo "<option value='" . $row['code'] . "'>" . $row['name'] . "</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -252,7 +247,7 @@ include('../include/database.php');
                         <!-- Row to carry table -->
                         <div class="row m-0 p-0 pt-1 d-flex align-items-center bg-white" id="table-container">
                             <div class="col-12 px-4 m-0 h-100">
-                                <table class="table table-sm">
+                                <table class="table table-sm table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>

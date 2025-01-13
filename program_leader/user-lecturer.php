@@ -33,13 +33,11 @@ include('../include/database.php');
 
         #content-container {
             min-height: calc(100% - 79px);
-            overflow: hidden;
         }
 
         /* The container is not 100% width under full screen width */
         #content-holder {
             width: calc(100% - 256px);
-            overflow: auto;
             background-color: rgb(240, 241, 246);
         }
 
@@ -70,7 +68,7 @@ include('../include/database.php');
         }
 
         #searchbar-container {
-            height: 20%;
+            height: 140px;
         }
 
         #searchbar-input {
@@ -83,7 +81,7 @@ include('../include/database.php');
         }
 
         #table-container {
-            min-height: 80%;
+            min-height: calc(100% - 140px);
             max-height: fit-content;
         }
 
@@ -102,15 +100,15 @@ include('../include/database.php');
             </div>
 
             <!-- Container for side navbar and content -->
-            <div class="row m-0 p-0" id="content-container">
+            <div class="row m-0 p-0 overflow hidden" id="content-container">
                 <!-- Side navabr -->
                 <!-- The side navabr collapse in default(display:none), and will only visible(display:flex) when screen width go above lg -->
                 <div class="border-end border-1 h-100 m-0 p-0 d-lg-flex justify-content-center collapse" id="side-navbar">
                     <!-- Content in side-navbar.html will be loaded here -->
                 </div>
                 <!-- Main content of the page will be loaded here -->
-                <div class="container h-100 m-0 p-0" id="content-holder">
-                    <div class="row h-100 m-0 p-0 overflow-auto">
+                <div class="container h-100 m-0 p-0 overflow-hidden" id="content-holder">
+                    <div class="row h-100 m-0 p-0 overflow-hidden">
                         <!-- Row to carry search bar -->
                         <div class="row m-0 p-0" id="searchbar-container">
                             <div class="col-8 p-0 m-0">
@@ -250,7 +248,7 @@ include('../include/database.php');
                         <!-- Row to carry table -->
                         <div class="row m-0 p-0 pt-1 d-flex align-items-center bg-white" id="table-container">
                             <div class="col-12 px-4 m-0 h-100">
-                                <table class="table table-sm">
+                                <table class="table table-sm table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
