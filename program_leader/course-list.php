@@ -159,34 +159,15 @@ include('../include/database.php');
                                             </button>
                                             <div class="dropdown-menu p-3" id="dropdown-menu">
                                                 <form autocomplete="off" id="filter-form">
-                                                    <!-- Category filtration-->
-                                                    <label for="category" class="form-label text-secondary mt-2 m-0">Category</label>
-                                                    <select class="form-select" id="category">
-                                                        <option selected disabled hidden>Category</option>
+                                                    <!-- Year filtration-->
+                                                    <label for="year" class="form-label text-secondary mt-2 m-0">Year</label>
+                                                    <select class="form-select" id="year">
+                                                        <option selected disabled hidden>Year</option>
                                                         <?php
-                                                        $code = "SELECT DISTINCT SUBSTRING(code,1,3) AS code FROM course WHERE department = '" . $_SESSION['department'] . "'";
-                                                        $result = mysqli_query($connection, $code);
+                                                        $year = "SELECT DISTINCT year FROM course WHERE department = '" . $_SESSION['department'] . "' ORDER BY year";
+                                                        $result = mysqli_query($connection, $year);
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            $name = "SELECT name FROM course_category WHERE code = '" . $row['code'] . "' AND department = '" . $_SESSION['department'] . "'";
-                                                            $result2 = mysqli_query($connection, $name);
-                                                            $coursename = mysqli_fetch_assoc($result2);
-                                                            echo "<option value='" . $row['code'] . "'>" . $coursename['name'] . "</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-
-                                                    <!-- Programme filtration-->
-                                                    <label for="programme" class="form-label text-secondary mt-2 m-0">Programme</label>
-                                                    <select class="form-select" id="programme">
-                                                        <option selected disabled hidden>Programme</option>
-                                                        <?php
-                                                        $programme = "SELECT DISTINCT programme FROM course WHERE department = '" . $_SESSION['department'] . "'";
-                                                        $result = mysqli_query($connection, $programme);
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $programme = "SELECT name FROM programme WHERE code = '" . $row['programme'] . "'";
-                                                            $result2 = mysqli_query($connection, $programme);
-                                                            $programmename = mysqli_fetch_assoc($result2);
-                                                            echo "<option value='" . $row['programme'] . "'>" . $programmename['name'] . "</option>";
+                                                            echo "<option value='" . $row['year'] . "'>Year " . $row['year'] . "</option>";
                                                         }
                                                         ?>
                                                     </select>
@@ -286,16 +267,10 @@ include('../include/database.php');
                 e.preventDefault();
                 let data = [];
                 // Get the value for category
-                const query1 = $('#category').val();
+                const query1 = $('#year').val();
                 if (query1) {
-                    const category = `code LIKE '${query1}%'`;
-                    data.push(category);    
-                }
-                // Get the value for programme
-                const query2 = $('#programme').val();
-                if (query2) {
-                    const programme = `programme = '${query2}'`;
-                    data.push(programme);
+                    const year = `year = '${query1}'`;
+                    data.push(year);    
                 }
 
                 console.log(data);

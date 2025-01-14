@@ -18,6 +18,11 @@ if (isset($_POST["submit"])) {
         $programleader = mysqli_query($connection, $account);
         $programleaderinfo = mysqli_fetch_assoc($programleader);
 
+        // Check program_leader table
+        $account = "SELECT * FROM academic_administrator WHERE email = '$email'";
+        $academicadministrator = mysqli_query($connection, $account);
+        $academicadministratorinfo = mysqli_fetch_assoc($academicadministrator);
+
         // If is lecturer and password correct
         if ((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] == $password)) {
             $_SESSION["department"] = $lecturerinfo['department'];
@@ -30,8 +35,14 @@ if (isset($_POST["submit"])) {
             $_SESSION["entity"] = "programleader";
             echo "success_programleader";
         }
+        // If is academic administrator and password correct
+        else if ((mysqli_num_rows($academicadministrator) > 0) && ($academicadministratorinfo["password"] == $password)) {
+            $_SESSION["department"] = $academicadministratorinfo['department'];
+            $_SESSION["entity"] = "academicadministrator";
+            echo "success_academicadministrator";
+        }
         // If account founded but password incorrect
-        else if (((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] != $password)) || ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] != $password))) {
+        else if (((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] != $password)) || ((mysqli_num_rows($academicadministrator) > 0) && ($academicadministratorinfo["password"] != $password)) || ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] != $password))) {
             echo "Incorrect password";
         }
         //If account doesn't existed
