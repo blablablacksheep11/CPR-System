@@ -30,6 +30,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 Action
                             </button>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" data-value="<?php echo $row['code']; ?>">View</a></li>
                                 <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="<?php echo $row['code']; ?>">Offer this course</a></li>
                             </ul>
                         </div>

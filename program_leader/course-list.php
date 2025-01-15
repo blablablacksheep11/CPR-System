@@ -192,7 +192,7 @@ include('../include/database.php');
                                     </div>
                                     <!-- Modal -->
                                     <!-- Pop up alert that will be displayed when program leader offer a course -->
-                                     <!-- The modal is hidden initially -->
+                                    <!-- The modal is hidden initially -->
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <!-- The content in load-modal will be loaded here -->
                                     </div>
@@ -217,6 +217,8 @@ include('../include/database.php');
             $('#course-list').load('../program_leader/load-course.php');
 
             // Load modal
+            // This is compulsory
+            // Error if removed
             $('#staticBackdrop').load('../program_leader/load-modal.php');
 
             // Search bar functionality
@@ -252,7 +254,7 @@ include('../include/database.php');
                                     emptymessage.classList.add('mt-3');
                                     emptymessage.innerHTML = 'No course found.';
                                     $('#course-list').html(emptymessage);
-                                } 
+                                }
                                 // If the data fetch is successful and there is smth
                                 else {
                                     $('#course-list').html(
@@ -275,6 +277,7 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
                                                                                 <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
                                                                             </ul>
                                                                         </div>
@@ -288,7 +291,7 @@ include('../include/database.php');
                             }
                         }
                     })
-                } 
+                }
                 // When there is no query in the search bar
                 else {
                     // Load student list
@@ -335,7 +338,7 @@ include('../include/database.php');
                                 emptymessage.classList.add('mt-3');
                                 emptymessage.innerHTML = 'No course found.';
                                 $('#course-list').html(emptymessage);
-                            } 
+                            }
                             // If the data fetch is successful and there is smth
                             else {
                                 $('#course-list').html(
@@ -358,6 +361,7 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
                                                                                 <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
                                                                             </ul>
                                                                         </div>
@@ -377,7 +381,27 @@ include('../include/database.php');
             $(document).on("click", ".offer-btn", function(e) {
                 e.preventDefault();
                 const coursecode = $(this).data("value"); // Get the course code
+                const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
                 sessionStorage.setItem("coursecode", coursecode);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/load-modal.php",
+                    data: {
+                        coursecode: coursecode,
+                        currentdate: currentdate
+                    },
+                    success: function(response) {
+                        if (response == "error") {
+                            alert("This course cannot be offered currently. Please try again later.");
+                        } else {
+                            // Load modal
+                            // The content in modal will channged according to the course offered status
+                            // refer to load-modal.php
+                            $('#staticBackdrop').load('../program_leader/load-modal.php');
+                        }
+                    }
+                })
             })
 
             // When the confirmed
@@ -385,7 +409,7 @@ include('../include/database.php');
             $(document).on("click", ".confirm-btn", function(e) {
                 e.preventDefault();
                 const offer = "offer";
-                const coursecode = sessionStorage.getItem("coursecode");  // Fetch the coursecode from session storage, client side
+                const coursecode = sessionStorage.getItem("coursecode"); // Fetch the coursecode from session storage, client side
                 const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
 
                 $.ajax({
@@ -397,9 +421,9 @@ include('../include/database.php');
                         currentdate: currentdate
                     },
                     success: function(response) {
-                        if(response == "success") {
+                        if (response == "success") {
                             alert("Course offered successfully.");
-                        } else if(response == "error") {
+                        } else if (response == "error") {
                             alert("Failed to offer this course.");
                         }
                     }
