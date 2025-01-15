@@ -188,7 +188,13 @@ include('../include/database.php');
                             <div class="col-12 px-4 m-0 h-100">
                                 <div class="container-fluid text-center p-0 m-0">
                                     <div class="row row-cols-4 p-0 m-0" id="course-list">
-                                        <!-- The saerch can work edi but the size of column will auto adjust -->
+                                        <!-- The content in load-course.php will be loaded here -->
+                                    </div>
+                                    <!-- Modal -->
+                                    <!-- Pop up alert that will be displayed when program leader offer a course -->
+                                     <!-- The modal is hidden initially -->
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <!-- The content in load-modal will be loaded here -->
                                     </div>
                                 </div>
                             </div>
@@ -210,11 +216,16 @@ include('../include/database.php');
             // Load student list
             $('#course-list').load('../program_leader/load-course.php');
 
+            // Load modal
+            $('#staticBackdrop').load('../program_leader/load-modal.php');
+
             // Search bar functionality
             $(document).on('input', '#searchbar-input', function(e) {
                 e.preventDefault();
                 const query = $(this).val();
 
+                // When there is query in the serach bar
+                // Load the courses according to the query
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
@@ -224,6 +235,7 @@ include('../include/database.php');
                             query: query
                         },
                         success: function(response) {
+                            // If the data fetch failed
                             if (response == 'Unsuccessful') {
                                 const failedmessage = document.createElement('div');
                                 failedmessage.classList.add('container-fluid');
@@ -232,6 +244,7 @@ include('../include/database.php');
                                 failedmessage.innerHTML = 'Search failed. Please try again later.';
                                 $('#course-list').html(failedmessage);
                             } else {
+                                // If the data fetch is successful but empty
                                 if (response == 'empty') {
                                     const emptymessage = document.createElement('div');
                                     emptymessage.classList.add('container-fluid');
@@ -239,16 +252,34 @@ include('../include/database.php');
                                     emptymessage.classList.add('mt-3');
                                     emptymessage.innerHTML = 'No course found.';
                                     $('#course-list').html(emptymessage);
-                                } else {
+                                } 
+                                // If the data fetch is successful and there is smth
+                                else {
                                     $('#course-list').html(
                                         response.map(function(row) {
                                             return `<div class="col-12 col-md-6 col-xl-4 col-xxl-3 d-flex mb-3 align-items-center justify-content-center">
-                                                        <div class="card" style="width: 21rem; height: 18rem;" role="button">
+                                                        <div class="card" style="width: 21rem; height: 18rem;">
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
-                                                            <div class="card-body p-0 px-3 m-0 d-flex flex-column align-items-start">
-                                                                <p class="card-text fs-6 text-body-secondary m-0 mt-1 p-0 text-start" id="code">${row.code}</p>
-                                                                <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
-                                                                <p class="card-text m-0 mb-2 p-0 text-start position-absolute bottom-0" id="credit-hour" style="font-size: small;">Credit hours:&nbsp;${row.credit_hour}</p>
+                                                            <div class="card-body p-0 m-0">
+                                                                <div class="row w-100 p-0 px-3 m-0 mt-1">
+                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
+                                                                    <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
+                                                                </div>
+                                                                <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">
+                                                                    <div class="col-7 p-0 m-0 d-flex align-items-end">
+                                                                        <p class="card-text text-start m-0 p-0" id="credit-hour" style="font-size: small;">Credit hours:&nbsp;${row.credit_hour}</p>
+                                                                    </div>
+                                                                    <div class="col-5 p-0 m-0 d-flex align-items-center">
+                                                                        <div class="dropdown">
+                                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                Action
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>`;
@@ -257,7 +288,9 @@ include('../include/database.php');
                             }
                         }
                     })
-                } else {
+                } 
+                // When there is no query in the search bar
+                else {
                     // Load student list
                     $('#course-list').load('../program_leader/load-course.php');
                 }
@@ -270,7 +303,7 @@ include('../include/database.php');
                 const query1 = $('#year').val();
                 if (query1) {
                     const year = `year = '${query1}'`;
-                    data.push(year);    
+                    data.push(year);
                 }
 
                 console.log(data);
@@ -283,8 +316,9 @@ include('../include/database.php');
                         data: data
                     },
                     success: function(response) {
-                        $('#filter-form')[0].reset();
-                        $('#dropdown-menu').removeClass('show');
+                        $('#filter-form')[0].reset(); // Reset the form
+                        $('#dropdown-menu').removeClass('show'); // Hide the dropdown
+                        // If the data fetch failed
                         if (response == 'Unsuccessful') {
                             const failedmessage = document.createElement('div');
                             failedmessage.classList.add('container-fluid');
@@ -293,6 +327,7 @@ include('../include/database.php');
                             failedmessage.innerHTML = 'Search failed. Please try again later.';
                             $('#course-list').html(failedmessage);
                         } else {
+                            // If the data fetch is successful but empty
                             if (response == 'empty') {
                                 const emptymessage = document.createElement('div');
                                 emptymessage.classList.add('container-fluid');
@@ -300,21 +335,72 @@ include('../include/database.php');
                                 emptymessage.classList.add('mt-3');
                                 emptymessage.innerHTML = 'No course found.';
                                 $('#course-list').html(emptymessage);
-                            } else {
+                            } 
+                            // If the data fetch is successful and there is smth
+                            else {
                                 $('#course-list').html(
                                     response.map(function(row) {
                                         return `<div class="col-12 col-md-6 col-xl-4 col-xxl-3 d-flex mb-3 align-items-center justify-content-center">
-                                                        <div class="card" style="width: 21rem; height: 18rem;" role="button">
+                                                        <div class="card" style="width: 21rem; height: 18rem;">
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
-                                                            <div class="card-body p-0 px-3 m-0 d-flex flex-column align-items-start">
-                                                                <p class="card-text fs-6 text-body-secondary m-0 mt-1 p-0 text-start" id="code">${row.code}</p>
-                                                                <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
-                                                                <p class="card-text m-0 mb-2 p-0 text-start position-absolute bottom-0" id="credit-hour" style="font-size: small;">Credit hours:&nbsp;${row.credit_hour}</p>
+                                                            <div class="card-body p-0 m-0">
+                                                                <div class="row w-100 p-0 px-3 m-0 mt-1">
+                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
+                                                                    <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
+                                                                </div>
+                                                                <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">
+                                                                    <div class="col-7 p-0 m-0 d-flex align-items-end">
+                                                                        <p class="card-text text-start m-0 p-0" id="credit-hour" style="font-size: small;">Credit hours:&nbsp;${row.credit_hour}</p>
+                                                                    </div>
+                                                                    <div class="col-5 p-0 m-0 d-flex align-items-center">
+                                                                        <div class="dropdown">
+                                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                Action
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>`;
                                     }))
                             }
+                        }
+                    }
+                })
+            })
+
+            // When a courses is selected to be offered
+            $(document).on("click", ".offer-btn", function(e) {
+                e.preventDefault();
+                const coursecode = $(this).data("value"); // Get the course code
+                sessionStorage.setItem("coursecode", coursecode);
+            })
+
+            // When the confirmed
+            // Pop up confirmation in modal
+            $(document).on("click", ".confirm-btn", function(e) {
+                e.preventDefault();
+                const offer = "offer";
+                const coursecode = sessionStorage.getItem("coursecode");  // Fetch the coursecode from session storage, client side
+                const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/action.php",
+                    data: {
+                        offer: offer,
+                        coursecode: coursecode,
+                        currentdate: currentdate
+                    },
+                    success: function(response) {
+                        if(response == "success") {
+                            alert("Course offered successfully.");
+                        } else if(response == "error") {
+                            alert("Failed to offer this course.");
                         }
                     }
                 })
