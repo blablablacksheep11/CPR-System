@@ -26,18 +26,21 @@ if (isset($_POST["submit"])) {
         // If is lecturer and password correct
         if ((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] == $password)) {
             $_SESSION["department"] = $lecturerinfo['department'];
+            $_SESSION["name"] = $lecturerinfo['name'];
             $_SESSION["entity"] = "lecturer";
             echo "success_lecturer";
         }
         // If is program leader and password correct
         else if ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] == $password)) {
             $_SESSION["department"] = $programleaderinfo['department'];
+            $_SESSION["name"] = $programleaderinfo['name'];
             $_SESSION["entity"] = "programleader";
             echo "success_programleader";
         }
         // If is academic administrator and password correct
         else if ((mysqli_num_rows($academicadministrator) > 0) && ($academicadministratorinfo["password"] == $password)) {
             $_SESSION["department"] = $academicadministratorinfo['department'];
+            $_SESSION["name"] = $academicadministratorinfo['name'];
             $_SESSION["entity"] = "academicadministrator";
             echo "success_academicadministrator";
         }

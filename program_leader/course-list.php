@@ -109,7 +109,7 @@ include('../include/database.php');
     <div class="container-fluid position-absolute h-100 p-0 m-0" id="main-container">
         <div class="row h-100 m-0 p-0">
             <!-- Top navbar -->
-            <div class="row border-bottom border-1 m-0 p-0" id="top-navbar">
+            <div class="row border-bottom border-1 m-0 p-0 d-flex justify-content-between" id="top-navbar">
                 <!-- Content in top-navbar.html will be loaded here -->
             </div>
 
@@ -208,7 +208,7 @@ include('../include/database.php');
     <script>
         $(document).ready(function() {
             // Load top navbar content
-            $('#top-navbar').load('../program_leader/top-navbar.html');
+            $('#top-navbar').load('../program_leader/top-navbar.php');
             // Load side navbar content
             $('#side-navbar').load('../program_leader/side-navbar.html');
             // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
