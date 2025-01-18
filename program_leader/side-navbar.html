@@ -133,10 +133,9 @@
         for (let i = 0; i < caretbtn.length; i++) {
             // Add click event listener to each button
             caretbtn[i].addEventListener("click", (e) => {
-                // Find the icon element within the clicked button
-                const icon = e.target.querySelector(".bi-caret-right-fill, .bi-caret-down-fill");
+                const icon = e.target.querySelector(".bi-caret-right-fill, .bi-caret-down-fill"); // Get the icon
                 if (icon) {
-                    // Toggle between the classes
+                    // Change the icon direction
                     if (icon.classList.contains("bi-caret-right-fill")) {
                         icon.classList.remove("bi-caret-right-fill");
                         icon.classList.add("bi-caret-down-fill");

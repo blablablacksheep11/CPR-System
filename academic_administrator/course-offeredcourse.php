@@ -207,84 +207,84 @@ include('../include/database.php');
     <!-- Functional script -->
     <script>
         $(document).ready(function() {
-            // Function to load course list
-            function loadCourse() {
-                $.ajax({
-                    type: 'POST',
-                    url: '../program_leader/load-course.php',
-                    success: function(response) {
-                        if (response == 'error') {
-                            $('#course-list').html(failedMessage); // Display failed message
+            // Load top navbar content
+            $('#top-navbar').load('../academic_administrator/top-navbar.php');
+            // Load side navbar content
+            $('#side-navbar').load('../academic_administrator/side-navbar.html');
+            // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
+
+            $.ajax({
+                type: "POST",
+                url: "../academic_administrator/load-course.php",
+                data: {
+                    currentdate: sessionStorage.getItem("currentdate")
+                },
+                success: function(response) {
+                    if (response == 'error') {
+                        const failedmessage = document.createElement('div');
+                        failedmessage.classList.add('container-fluid');
+                        failedmessage.classList.add('text-center');
+                        failedmessage.classList.add('mt-3');
+                        failedmessage.innerHTML = 'Search failed. Please try again later.';
+                        $('#course-list').html(failedmessage);
+                    } else {
+                        if (response == 'empty') {
+                            const emptymessage = document.createElement('div');
+                            emptymessage.classList.add('container-fluid');
+                            emptymessage.classList.add('text-center');
+                            emptymessage.classList.add('mt-3');
+                            emptymessage.innerHTML = 'No course found.';
+                            $('#course-list').html(emptymessage);
                         } else {
-                            if (response == 'empty') {
-                                $('#course-list').html(emptyMessage); // Display empty message
-                            } else {
-                                $('#course-list').html(
-                                    response.map(function(row) { // Display search result
-                                        return `<div class="col-12 col-md-6 col-xl-4 col-xxl-3 d-flex mb-3 align-items-center justify-content-center">
-                                                        <div class="card" style="width: 21rem; height: 18rem;">
-                                                            <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
-                                                            <div class="card-body p-0 m-0">
-                                                                <div class="row w-100 p-0 px-3 m-0 mt-1">
-                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
-                                                                    <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
-                                                                </div>
-                                                                <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">
-                                                                    <div class="col-7 p-0 m-0 d-flex align-items-end">
-                                                                        <p class="card-text text-start m-0 p-0" id="credit-hour" style="font-size: small;">Credit hours:&nbsp;${row.credit_hour}</p>
-                                                                    </div>
-                                                                    <div class="col-5 p-0 m-0 d-flex align-items-center">
-                                                                        <div class="dropdown">
-                                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
-                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>`;
-                                    }))
-                            }
+                            $('#course-list').load('../academic_administrator/load-course.php');
                         }
                     }
-                })
-            }
+                }
+            })
 
-            $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
-            $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
-            $('#staticBackdrop').load('../program_leader/load-modal.php'); // Load modal
-            loadCourse(); // Load course list
+            // Load modal
+            // This is compulsory
+            // Error if removed
+            $('#staticBackdrop').load('../program_leader/load-modal.php');
 
-            let failedMessage = `<div class="container-fluid text-center mt-3">Search failed. Please try again later.</div>`; // Message to display when search failed
-            let emptyMessage = `<div class="container-fluid text-center mt-3">No course found.</div>`; // Message to display when no course found
-
-            // Event listener for search bar
+            // Search bar functionality
             $(document).on('input', '#searchbar-input', function(e) {
                 e.preventDefault();
-                const query = $(this).val(); // Get search query
+                const query = $(this).val();
 
+                // When there is query in the serach bar
+                // Load the courses according to the query
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/load-course.php',
+                        url: '../program_leader/search-course.php',
                         data: {
                             search: 'search',
                             query: query
                         },
                         success: function(response) {
-                            if (response == 'error') {
-                                $('#course-list').html(failedMessage); // Display failed message
+                            // If the data fetch failed
+                            if (response == 'Unsuccessful') {
+                                const failedmessage = document.createElement('div');
+                                failedmessage.classList.add('container-fluid');
+                                failedmessage.classList.add('text-center');
+                                failedmessage.classList.add('mt-3');
+                                failedmessage.innerHTML = 'Search failed. Please try again later.';
+                                $('#course-list').html(failedmessage);
                             } else {
+                                // If the data fetch is successful but empty
                                 if (response == 'empty') {
-                                    $('#course-list').html(emptyMessage); // Display empty message
-                                } else {
+                                    const emptymessage = document.createElement('div');
+                                    emptymessage.classList.add('container-fluid');
+                                    emptymessage.classList.add('text-center');
+                                    emptymessage.classList.add('mt-3');
+                                    emptymessage.innerHTML = 'No course found.';
+                                    $('#course-list').html(emptymessage);
+                                }
+                                // If the data fetch is successful and there is smth
+                                else {
                                     $('#course-list').html(
-                                        response.map(function(row) { // Display search result
+                                        response.map(function(row) {
                                             return `<div class="col-12 col-md-6 col-xl-4 col-xxl-3 d-flex mb-3 align-items-center justify-content-center">
                                                         <div class="card" style="width: 21rem; height: 18rem;">
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
@@ -317,45 +317,58 @@ include('../include/database.php');
                             }
                         }
                     })
-                } else {
-                    loadCourse(); // Load course list
+                }
+                // When there is no query in the search bar
+                else {
+                    // Load student list
+                    $('#course-list').load('../program_leader/load-course.php');
                 }
             })
 
-            // Event listener for filter dropdown
             $(document).on("click", "#filter-submit", function(e) {
                 e.preventDefault();
                 let data = [];
+                // Get the value for category
+                const query1 = $('#year').val();
+                if (query1) {
+                    const year = `year = '${query1}'`;
+                    data.push(year);
+                }
 
-                // Get all filter values, format them into SQL query
-                const filters = [
-                    { id: '#year', format: val => `year = '${val}'` }
-                ];
-
-                // Loop through filters, append to data array if value is not empty
-                filters.forEach(filter => {
-                    const value = $(filter.id).val();
-                    if (value) data.push(filter.format(value));
-                });
+                console.log(data);
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-course.php",
+                    url: "../program_leader/search-course.php",
                     data: {
                         filter: "filter",
                         data: data
                     },
                     success: function(response) {
-                        $('#filter-form')[0].reset(); // Reset filter form
-                        $('#dropdown-menu').removeClass('show'); // Hide filter dropdown
-                        if (response == 'error') {
-                            $('#course-list').html(failedMessage); // Display failed message
+                        $('#filter-form')[0].reset(); // Reset the form
+                        $('#dropdown-menu').removeClass('show'); // Hide the dropdown
+                        // If the data fetch failed
+                        if (response == 'Unsuccessful') {
+                            const failedmessage = document.createElement('div');
+                            failedmessage.classList.add('container-fluid');
+                            failedmessage.classList.add('text-center');
+                            failedmessage.classList.add('mt-3');
+                            failedmessage.innerHTML = 'Search failed. Please try again later.';
+                            $('#course-list').html(failedmessage);
                         } else {
+                            // If the data fetch is successful but empty
                             if (response == 'empty') {
-                                $('#course-list').html(emptyMessage); // Display empty message
-                            } else {
+                                const emptymessage = document.createElement('div');
+                                emptymessage.classList.add('container-fluid');
+                                emptymessage.classList.add('text-center');
+                                emptymessage.classList.add('mt-3');
+                                emptymessage.innerHTML = 'No course found.';
+                                $('#course-list').html(emptymessage);
+                            }
+                            // If the data fetch is successful and there is smth
+                            else {
                                 $('#course-list').html(
-                                    response.map(function(row) { // Display filter result
+                                    response.map(function(row) {
                                         return `<div class="col-12 col-md-6 col-xl-4 col-xxl-3 d-flex mb-3 align-items-center justify-content-center">
                                                         <div class="card" style="width: 21rem; height: 18rem;">
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
@@ -390,12 +403,12 @@ include('../include/database.php');
                 })
             })
 
-            // Event listener for offer button
+            // When a courses is selected to be offered
             $(document).on("click", ".offer-btn", function(e) {
                 e.preventDefault();
-                const coursecode = $(this).data("value"); // Get selected course's code
-                const currentdate = sessionStorage.getItem("currentdate"); // Fetch currentdate from session storage, client side
-                sessionStorage.setItem("coursecode", coursecode); // Store coursecode in session storage, client side
+                const coursecode = $(this).data("value"); // Get the course code
+                const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
+                sessionStorage.setItem("coursecode", coursecode);
 
                 $.ajax({
                     type: "POST",
@@ -406,15 +419,19 @@ include('../include/database.php');
                     },
                     success: function(response) {
                         if (response == "error") {
-                            alert("This course cannot be offered currently. Please try again later."); // Alert error message
+                            alert("This course cannot be offered currently. Please try again later.");
                         } else {
-                            $('#staticBackdrop').load('../program_leader/load-modal.php'); // Display modal
+                            // Load modal
+                            // The content in modal will channged according to the course offered status
+                            // refer to load-modal.php
+                            $('#staticBackdrop').load('../program_leader/load-modal.php');
                         }
                     }
                 })
             })
 
-            // Event listener for confirm button
+            // When the confirmed
+            // Pop up confirmation in modal
             $(document).on("click", ".confirm-btn", function(e) {
                 e.preventDefault();
                 const offer = "offer";
@@ -431,9 +448,9 @@ include('../include/database.php');
                     },
                     success: function(response) {
                         if (response == "success") {
-                            alert("Course offered successfully."); // Alert success message
+                            alert("Course offered successfully.");
                         } else if (response == "error") {
-                            alert("Failed to offer this course."); // Alert error message
+                            alert("Failed to offer this course.");
                         }
                     }
                 })

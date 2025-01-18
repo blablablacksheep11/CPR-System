@@ -2,14 +2,14 @@
 session_start();
 include("../include/database.php");
 
-// This file will be handling all the action and behaviour of the program leader
+// This file is used to handle the action of the program leader
 
-// If the program leader offer a course in a semesters
+// Offer course
 if(isset($_POST["offer"])) {
     $coursecode = $_POST["coursecode"];
     $currentdate = $_POST["currentdate"];
 
-    // Get the semester id base on the current date
+    // Get the semester id based on current date
     $semester = "SELECT id FROM semester WHERE start < '$currentdate' AND end > '$currentdate'";
     $result = mysqli_query($connection, $semester);
     $semesterid = mysqli_fetch_assoc($result);

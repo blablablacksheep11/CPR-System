@@ -144,14 +144,14 @@ include('../include/database.php');
                                                 Sort
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="CAST(SUBSTRING(student_id, 5) AS INT)">ID: Ascending</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="CAST(SUBSTRING(student_id, 5) AS INT) DESC">ID: Descending</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="name">Name: A to Z</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="name DESC">Name: Z to A</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="email">Email: A to Z</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="email DESC">Email: Z to A</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="intake">Intake: Ascending</a></li>
-                                                <li><a class="dropdown-item sort-option" role="button" data-value="intake DESC">Intake: Descending</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="CAST(SUBSTRING(student.student_id, 5) AS INT)">ID: Ascending</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="CAST(SUBSTRING(student.student_id, 5) AS INT) DESC">ID: Descending</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.name">Name: A to Z</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.name DESC">Name: Z to A</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.email">Email: A to Z</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.email DESC">Email: Z to A</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.intake">Intake: Ascending</a></li>
+                                                <li><a class="dropdown-item sort-option" role="button" data-value="student.intake DESC">Intake: Descending</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -273,42 +273,74 @@ include('../include/database.php');
     <!-- Functional script -->
     <script>
         $(document).ready(function() {
-            // Load top navbar content
-            $('#top-navbar').load('../program_leader/top-navbar.php');
-            // Load side navbar content
-            $('#side-navbar').load('../program_leader/side-navbar.html');
-            // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
+            // Function to load student list
+            function loadStudent() {
+                $.ajax({
+                    type: 'POST',
+                    url: '../program_leader/load-student.php',
+                    success: function(response) {
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
+                        } else {
+                            if (response == 'empty') {
+                                $('tbody').html(emptyMessage); // Display empty message
+                            } else {
+                                let counter = 1;
+                                $('tbody').html(
+                                    response.map(function(row) { // Display search result
+                                        return `<tr>
+                                                    <th class='py-3' scope='row'>${counter++}</th>;
+                                                    <td class='py-3'>${row.student_id}</td>
+                                                    <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
+                                                    <td class='py-3'>${row.email}</td>
+                                                    <td class='py-3'>${row.intake}</td>
+                                                    <td class='py-3'>${row.programme}</td>
+                                                    <td class="py-3">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option value="${row.id}" selected>View</option>
+                                                            <option value="${row.id}">Edit</option>
+                                                            <option value="${row.id}">Delete</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>`;
+                                    }))
+                            }
+                        }
+                    }
+                })
+            }
 
-            // Load student list
-            $('tbody').load('../program_leader/load-student.php');
+            $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
+            $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
+            loadStudent(); // Load student list
 
-            // Search bar functionality
+
+            let failedMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
+            let emptyMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">No student found.</td></tr>`; // Message to display when no student found
+
+            // Event listener for search bar
             $(document).on('input', '#searchbar-input', function(e) {
                 e.preventDefault();
-                const query = $(this).val();
+                const query = $(this).val(); // Get search query
 
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/search-student.php',
+                        url: '../program_leader/load-student.php',
                         data: {
                             search: 'search',
                             query: query
                         },
                         success: function(response) {
-                            if (response == 'Unsuccessful') {
-                                const failedmessage = document.createElement('tr');
-                                failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                                $('tbody').html(failedmessage);
+                            if (response == 'error') {
+                                $('tbody').html(failedMessage); // Display failed message
                             } else {
                                 if (response == 'empty') {
-                                    const emptymessage = document.createElement('tr');
-                                    emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No student found.</td>';
-                                    $('tbody').html(emptymessage);
+                                    $('tbody').html(emptyMessage); // Display empty message
                                 } else {
                                     let counter = 1;
                                     $('tbody').html(
-                                        response.map(function(row) {
+                                        response.map(function(row) { // Display search result
                                             return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
                                                     <td class='py-3'>${row.student_id}</td>
@@ -330,36 +362,32 @@ include('../include/database.php');
                         }
                     })
                 } else {
-                    // Load student list
-                    $('tbody').load('../program_leader/load-student.php');
+                    loadStudent(); // Load student list
                 }
             })
 
+            // Event listener for sort dropdown
             $(document).on("click", ".sort-option", function(e) {
                 e.preventDefault();
-                const query = $(this).data('value');
+                const query = $(this).data('value'); // Get sort query
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/search-student.php",
+                    url: "../program_leader/load-student.php",
                     data: {
                         sort: "sort",
                         query: query
                     },
                     success: function(response) {
-                        if (response == 'Unsuccessful') {
-                            const failedmessage = document.createElement('tr');
-                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                            $('tbody').html(failedmessage);
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                const emptymessage = document.createElement('tr');
-                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No student found.</td>';
-                                $('tbody').html(emptymessage);
+                                $('tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
                                 $('tbody').html(
-                                    response.map(function(row) {
+                                    response.map(function(row) { // Display sort result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
                                                     <td class='py-3'>${row.student_id}</td>
@@ -382,73 +410,47 @@ include('../include/database.php');
                 })
             })
 
+            // Event listener for filter dropdown
             $(document).on("click", "#filter-submit", function(e) {
                 e.preventDefault();
                 let data = [];
-                // Get the value for name start with ....
-                const query1 = $('#name-start').val();
-                if (query1) {
-                    const namestart = `name LIKE '${query1}%'`;
-                    data.push(namestart);
-                }
-                // Get the value for name end with ....
-                const query2 = $('#name-end').val();
-                if (query2) {
-                    const nameend = `name LIKE '%${query2}'`;
-                    data.push(nameend);
-                }
-                // Get the value of gender
-                const query3 = $('input[name="gender"]:checked').val();
-                if (query3) {
-                    const gender = `gender = '${query3}'`;
-                    data.push(gender);
-                }
-                // Get the value for email start with ....
-                const query4 = $('#email-start').val();
-                if (query4) {
-                    const emailstart = `email LIKE '${query4}%'`;
-                    data.push(emailstart);
-                }
-                // Get the value for email end with ....
-                const query5 = $('#email-end').val();
-                if (query5) {
-                    const emailend = `email LIKE '%${query5}'`;
-                    data.push(emailend);
-                }
-                const query6 = $('#intake').val();
-                if (query6) {
-                    const intake = `intake = ${query6}`;
-                    data.push(intake);
-                }
-                const query7 = $('#programme').val();
-                if (query7) {
-                    const programme = `programme = '${query7}'`;
-                    data.push(programme);
-                }
+
+                // Get all filter values, format them into SQL query
+                const filters = [
+                    { id: '#name-start', format: val => `student.name LIKE '${val}%'` },
+                    { id: '#name-end', format: val => `student.name LIKE '%${val}'` },
+                    { id: 'input[name="gender"]:checked', format: val => `student.gender = '${val}'` },
+                    { id: '#email-start', format: val => `student.email LIKE '${val}%'` },
+                    { id: '#email-end', format: val => `student.email LIKE '%${val}'` },
+                    { id: '#intake', format: val => `student.intake = ${val}` },
+                    { id: '#programme',format: val => `student.programme = '${val}'` }
+                ];
+
+                // Loop through filters, append to data array if value is not empty
+                filters.forEach(filter => {
+                    const value = $(filter.id).val();
+                    if (value) data.push(filter.format(value));
+                });
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/search-student.php",
+                    url: "../program_leader/load-student.php",
                     data: {
                         filter: "filter",
                         data: data
                     },
                     success: function(response) {
-                        $('#filter-form')[0].reset();
-                        $('#dropdown-menu').removeClass('show');
-                        if (response == 'Unsuccessful') {
-                            const failedmessage = document.createElement('tr');
-                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                            $('tbody').html(failedmessage);
+                        $('#filter-form')[0].reset(); // Reset filter form
+                        $('#dropdown-menu').removeClass('show'); // Hide filter dropdown
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                const emptymessage = document.createElement('tr');
-                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No student found.</td>';
-                                $('tbody').html(emptymessage);
+                                $('tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
                                 $('tbody').html(
-                                    response.map(function(row) {
+                                    response.map(function(row) { // Display filter result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
                                                     <td class='py-3'>${row.student_id}</td>

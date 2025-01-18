@@ -95,7 +95,7 @@ include('../include/database.php');
     <div class="container-fluid position-absolute h-100 p-0 m-0 overflow-hidden" id="main-container">
         <div class="row h-100 m-0 p-0">
             <!-- Top navbar -->
-            <div class="row border-bottom border-1 m-0 p-0  d-flex justify-content-between" id="top-navbar">
+            <div class="row border-bottom border-1 m-0 p-0 d-flex justify-content-between" id="top-navbar">
                 <!-- Content in top-navbar.html will be loaded here -->
             </div>
 
@@ -273,92 +273,118 @@ include('../include/database.php');
     <!-- Functional script -->
     <script>
         $(document).ready(function() {
-            // Load top navbar content
-            $('#top-navbar').load('../program_leader/top-navbar.php');
-            // Load side navbar content
-            $('#side-navbar').load('../program_leader/side-navbar.html');
-            // The Js that existed in top-navbar.html and side-navabr.html will also be loaded and bring effects to this document
+            // Function to load lecturer list
+            function loadLecturer() {
+                $.ajax({
+                    type: 'POST',
+                    url: '../program_leader/load-lecturer.php',
+                    success: function(response) {
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
+                        } else {
+                            if (response == 'empty') {
+                                $('tbody').html(emptyMessage); // Display empty message
+                            } else {
+                                let counter = 1;
+                                $('tbody').html(
+                                    response.map(function(row) { // Display search result
+                                        return `<tr>
+                                                        <th class='py-3' scope='row'>${counter++}</th>;
+                                                        <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
+                                                        <td class='py-3'>${row.email}</td>
+                                                        <td class='py-3'>${row.position}</td>
+                                                        <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
+                                                        <td class="py-3">
+                                                            <select class="form-select" aria-label="Default select example">
+                                                                <option value="${row.id}" selected>View</option>
+                                                                <option value="${row.id}">Edit</option>
+                                                                <option value="${row.id}">Delete</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>`;
+                                    }))
+                            }
+                        }
+                    }
+                })
+            }
 
-            // Load lecturer list
-            $('tbody').load('../program_leader/load-lecturer.php');
+            $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
+            $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
+            loadLecturer(); // Load lecturer list
 
-            // Search bar functionality
+            let failedMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
+            let emptyMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td></tr>`; // Message to display when no lecturer found
+
+            // Event listener for search bar
             $(document).on('input', '#searchbar-input', function(e) {
                 e.preventDefault();
-                const query = $(this).val();
+                const query = $(this).val(); // Get search query
 
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/search-lecturer.php',
+                        url: '../program_leader/load-lecturer.php',
                         data: {
                             search: 'search',
                             query: query
                         },
                         success: function(response) {
-                            if (response == 'Unsuccessful') {
-                                const failedmessage = document.createElement('tr');
-                                failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                                $('tbody').html(failedmessage);
+                            if (response == 'error') {
+                                $('tbody').html(failedMessage); // Display failed message
                             } else {
                                 if (response == 'empty') {
-                                    const emptymessage = document.createElement('tr');
-                                    emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
-                                    $('tbody').html(emptymessage);
+                                    $('tbody').html(emptyMessage); // Display empty message
                                 } else {
                                     let counter = 1;
                                     $('tbody').html(
-                                        response.map(function(row) {
+                                        response.map(function(row) { // Display search result
                                             return `<tr>
-                                                    <th class='py-3' scope='row'>${counter++}</th>;
-                                                    <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
-                                                    <td class='py-3'>${row.email}</td>
-                                                    <td class='py-3'>${row.position}</td>
-                                                    <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
-                                                    <td class="py-3">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option value="${row.id}" selected>View</option>
-                                                            <option value="${row.id}">Edit</option>
-                                                            <option value="${row.id}">Delete</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>`;
+                                                        <th class='py-3' scope='row'>${counter++}</th>;
+                                                        <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
+                                                        <td class='py-3'>${row.email}</td>
+                                                        <td class='py-3'>${row.position}</td>
+                                                        <td class='py-3'>${row.type === 'FT' ? 'Full Time' : 'Part Time'}</td>
+                                                        <td class="py-3">
+                                                            <select class="form-select" aria-label="Default select example">
+                                                                <option value="${row.id}" selected>View</option>
+                                                                <option value="${row.id}">Edit</option>
+                                                                <option value="${row.id}">Delete</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>`;
                                         }))
                                 }
                             }
                         }
                     })
                 } else {
-                    // Load lecturer list
-                    $('tbody').load('../program_leader/load-lecturer.php');
+                    loadLecturer(); // Load lecturer list
                 }
             })
 
+            // Event listener for sort dropdown
             $(document).on("click", ".sort-option", function(e) {
                 e.preventDefault();
-                const query = $(this).data('value');
+                const query = $(this).data('value'); // Get sort query
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/search-lecturer.php",
+                    url: "../program_leader/load-lecturer.php",
                     data: {
                         sort: "sort",
                         query: query
                     },
                     success: function(response) {
-                        if (response == 'Unsuccessful') {
-                            const failedmessage = document.createElement('tr');
-                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                            $('tbody').html(failedmessage);
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                const emptymessage = document.createElement('tr');
-                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
-                                $('tbody').html(emptymessage);
+                                $('tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
                                 $('tbody').html(
-                                    response.map(function(row) {
+                                    response.map(function(row) { // Display sort result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
                                                     <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>
@@ -380,73 +406,67 @@ include('../include/database.php');
                 })
             })
 
+            // Event listener for filter dropdown
             $(document).on("click", "#filter-submit", function(e) {
                 e.preventDefault();
                 let data = [];
-                // Get the value for name start with ....
-                const query1 = $('#name-start').val();
-                if (query1) {
-                    const namestart = `name LIKE '${query1}%'`;
-                    data.push(namestart);
-                }
-                // Get the value for name end with ....
-                const query2 = $('#name-end').val();
-                if (query2) {
-                    const nameend = `name LIKE '%${query2}'`;
-                    data.push(nameend);
-                }
-                // Get the value of gender
-                const query3 = $('input[name="gender"]:checked').val();
-                if (query3) {
-                    const gender = `gender = '${query3}'`;
-                    data.push(gender);
-                }
-                // Get the value for email start with ....
-                const query4 = $('#email-start').val();
-                if (query4) {
-                    const emailstart = `email LIKE '${query4}%'`;
-                    data.push(emailstart);
-                }
-                // Get the value for email end with ....
-                const query5 = $('#email-end').val();
-                if (query5) {
-                    const emailend = `email LIKE '%${query5}'`;
-                    data.push(emailend);
-                }
-                const query6 = $('#position').val();
-                if (query6) {
-                    const position = `position = '${query6}'`;
-                    data.push(position);
-                }
-                const query7 = $('#type').val();
-                if (query7) {
-                    const type = `type = '${query7}'`;
-                    data.push(type);
-                }
+
+                // Get all filter values, format them into SQL query
+                const filters = [{
+                        id: '#name-start',
+                        format: val => `name LIKE '${val}%'`
+                    },
+                    {
+                        id: '#name-end',
+                        format: val => `name LIKE '%${val}'`
+                    },
+                    {
+                        id: 'input[name="gender"]:checked',
+                        format: val => `gender = '${val}'`
+                    },
+                    {
+                        id: '#email-start',
+                        format: val => `email LIKE '${val}%'`
+                    },
+                    {
+                        id: '#email-end',
+                        format: val => `email LIKE '%${val}'`
+                    },
+                    {
+                        id: '#position',
+                        format: val => `position = '${val}'`
+                    },
+                    {
+                        id: '#type',
+                        format: val => `type = '${val}'`
+                    }
+                ];
+
+                // Loop through filters, append to data array if value is not empty
+                filters.forEach(filter => {
+                    const value = $(filter.id).val();
+                    if (value) data.push(filter.format(value));
+                });
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/search-lecturer.php",
+                    url: "../program_leader/load-lecturer.php",
                     data: {
                         filter: "filter",
                         data: data
                     },
                     success: function(response) {
-                        $('#filter-form')[0].reset();
-                        $('#dropdown-menu').removeClass('show');
-                        if (response == 'Unsuccessful') {
-                            const failedmessage = document.createElement('tr');
-                            failedmessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td>';
-                            $('tbody').html(failedmessage);
+                        $('#filter-form')[0].reset(); // Reset filter form
+                        $('#dropdown-menu').removeClass('show'); // Hide filter dropdown
+                        if (response == 'error') {
+                            $('tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                const emptymessage = document.createElement('tr');
-                                emptymessage.innerHTML = '<td colspan="6" class="text-center py-3 border border-0">No lecturer found.</td>';
-                                $('tbody').html(emptymessage);
+                                $('tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
                                 $('tbody').html(
-                                    response.map(function(row) {
+                                    response.map(function(row) { // Display filter result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
                                                     <td class='py-3'>${row.name}&nbsp;<i class="bi ${row.gender === 'female' ? 'bi-gender-female' : 'bi-gender-male'} ps-1"></i></td>

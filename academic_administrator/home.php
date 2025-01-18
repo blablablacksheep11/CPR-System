@@ -83,7 +83,7 @@
     <script>
         $(document).ready(function() {
             // Load top navbar content
-            $('#top-navbar').load('../academic_administrator/top-navbar.html');
+            $('#top-navbar').load('../academic_administrator/top-navbar.php');
             // Load side navbar content
             $('#side-navbar').load('../academic_administrator/side-navbar.html');
 

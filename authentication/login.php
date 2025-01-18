@@ -27,6 +27,7 @@ if (isset($_POST["submit"])) {
         if ((mysqli_num_rows($lecturer) > 0) && ($lecturerinfo["password"] == $password)) {
             $_SESSION["department"] = $lecturerinfo['department'];
             $_SESSION["name"] = $lecturerinfo['name'];
+            $_SESSION["id"] = $lecturerinfo['id'];
             $_SESSION["entity"] = "lecturer";
             echo "success_lecturer";
         }
@@ -34,6 +35,7 @@ if (isset($_POST["submit"])) {
         else if ((mysqli_num_rows($programleader) > 0) && ($programleaderinfo["password"] == $password)) {
             $_SESSION["department"] = $programleaderinfo['department'];
             $_SESSION["name"] = $programleaderinfo['name'];
+            $_SESSION["id"] = $programleaderinfo['id'];
             $_SESSION["entity"] = "programleader";
             echo "success_programleader";
         }
@@ -41,6 +43,7 @@ if (isset($_POST["submit"])) {
         else if ((mysqli_num_rows($academicadministrator) > 0) && ($academicadministratorinfo["password"] == $password)) {
             $_SESSION["department"] = $academicadministratorinfo['department'];
             $_SESSION["name"] = $academicadministratorinfo['name'];
+            $_SESSION["id"] = $academicadministratorinfo['id'];
             $_SESSION["entity"] = "academicadministrator";
             echo "success_academicadministrator";
         }

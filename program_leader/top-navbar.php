@@ -75,21 +75,24 @@ include("../include/database.php");
         <i class="bi bi-person-circle fs-2 text-body-tertiary"></i>
         <div class="dropdown">
             <button class="btn bg-transparent dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <?php echo $_SESSION["name"]; ?>
+                <?php if (strlen($_SESSION['name']) > 15) {
+                    echo substr($_SESSION['name'], 0, 15) . "...";
+                } else {
+                    echo $_SESSION['name'];
+                } ?>
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item">Profile</a></li>
-              <li><a class="dropdown-item" id="logout-btn">Logout</a></li>
+                <li><a class="dropdown-item">Profile</a></li>
+                <li><a class="dropdown-item" id="logout-btn">Logout</a></li>
             </ul>
-          </div>
+        </div>
     </div>
 
     <!-- Functional script -->
-    <!-- This script is specially defined to prevent js conflict with side-navbar.html -->
     <script>
         const burgerbtn = document.getElementById("burger-btn");
 
-        burgerbtn.addEventListener("click", function (e) {
+        burgerbtn.addEventListener("click", function(e) {
             let collapseElement = e.target.getAttribute('value');
             let collapseItem = document.getElementById(collapseElement);
             if (collapseItem.classList.contains("show")) {
@@ -101,8 +104,9 @@ include("../include/database.php");
             }
         });
 
-        $(document).ready(function () {
-            $(document).on("click", "#logout-btn", function (e) {
+        $(document).ready(function() {
+            // Event listener for logout button
+            $(document).on("click", "#logout-btn", function(e) {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -110,9 +114,9 @@ include("../include/database.php");
                     data: {
                         logout: true
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response == "success") {
-                            window.location.replace('../authentication/login.html');
+                            window.location.replace('../authentication/login.html'); // Redirect to login page
                         }
                     }
                 });

@@ -1,3 +1,7 @@
+<?php
+session_start();
+include("../include/database.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,6 +30,12 @@
         #logo-holder {
             min-width: 256px;
             max-width: 256px;
+            background-color: transparent;
+        }
+
+        #profile-holder {
+            min-width: 220px;
+            max-width: 220px;
             background-color: transparent;
         }
 
@@ -61,12 +71,29 @@
             alt="SEGi College Penang" id="logo-partial">
     </div>
 
+    <div class="m-0 p-0 d-flex align-items-center justify-content-center" id="profile-holder">
+        <i class="bi bi-person-circle fs-2 text-body-tertiary"></i>
+        <div class="dropdown">
+            <button class="btn bg-transparent dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <?php if (strlen($_SESSION['name']) > 15) {
+                    echo substr($_SESSION['name'], 0, 15) . "...";
+                } else {
+                    echo $_SESSION['name'];
+                } ?>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item">Profile</a></li>
+                <li><a class="dropdown-item" id="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Functional script -->
     <!-- This script is specially defined to prevent js conflict with side-navbar.html -->
     <script>
         const burgerbtn = document.getElementById("burger-btn");
 
-        burgerbtn.addEventListener("click", function (e) {
+        burgerbtn.addEventListener("click", function(e) {
             let collapseElement = e.target.getAttribute('value');
             let collapseItem = document.getElementById(collapseElement);
             if (collapseItem.classList.contains("show")) {
@@ -76,6 +103,24 @@
                 collapseItem.classList.add("show"); // Show
                 collapseItem.style.display = "flex"; // Enable the justify-content-center
             }
+        });
+
+        $(document).ready(function() {
+            $(document).on("click", "#logout-btn", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "../include/logout.php",
+                    data: {
+                        logout: true
+                    },
+                    success: function(response) {
+                        if (response == "success") {
+                            window.location.replace('../authentication/login.html');
+                        }
+                    }
+                });
+            });
         });
     </script>
     <!-- Bootstrap CSS -->
