@@ -129,11 +129,11 @@ include('../include/database.php');
                                 <div class="row w-100 h-50 m-0 p-0 d-flex">
                                     <nav class="pt-1 ps-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item active">Courses</li>
-                                            <li class="breadcrumb-item active"><a href="course-list.php">List</a></li>
+                                            <li class="breadcrumb-item active">Enrolment</li>
+                                            <li class="breadcrumb-item active"><a href="course-list.php">Offered</a></li>
                                         </ol>
                                     </nav>
-                                    <h2 class="m-0 ps-4">Course List</h2>
+                                    <h2 class="m-0 ps-4">Course Offered</h2>
                                 </div>
                                 <div class="row w-100 h-50 m-0 p-0 d-flex align-items-center">
                                     <form>
@@ -194,7 +194,23 @@ include('../include/database.php');
                                     <!-- Pop up alert that will be displayed when program leader offer a course -->
                                     <!-- The modal is hidden initially -->
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <!-- The content in load-modal will be loaded here -->
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header border border-0">
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                                                        Course removing confirmation
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-start border border-0">
+                                                    Are you sure you want to remove this course?
+                                                </div>
+                                                <div class="modal-footer border border-0">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-primary confirm-btn" data-bs-dismiss="modal">Confirm</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -211,13 +227,16 @@ include('../include/database.php');
             function loadCourse() {
                 $.ajax({
                     type: 'POST',
-                    url: '../program_leader/load-course.php',
+                    url: '../program_leader/load-courseoffered.php',
+                    data: {
+                        currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side
+                    },
                     success: function(response) {
                         if (response == 'error') {
                             $('#course-list').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                $('#course-list').html(emptyMessage); // Display empty message
+                                $('#course-list').html(nullMessage); // Display empty message
                             } else {
                                 $('#course-list').html(
                                     response.map(function(row) { // Display search result
@@ -239,8 +258,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
-                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -257,11 +276,11 @@ include('../include/database.php');
 
             $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
             $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
-            $('#staticBackdrop').load('../program_leader/load-offermodal.php'); // Load modal
             loadCourse(); // Load course list
 
             let failedMessage = `<div class="container-fluid text-center mt-3">Search failed. Please try again later.</div>`; // Message to display when search failed
             let emptyMessage = `<div class="container-fluid text-center mt-3">No course found.</div>`; // Message to display when no course found
+            let nullMessage = `<div class="container-fluid text-center mt-3">No course offered yet.</div>`; // Message to display when no course found
 
             // Event listener for search bar
             $(document).on('input', '#searchbar-input', function(e) {
@@ -271,10 +290,11 @@ include('../include/database.php');
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/load-course.php',
+                        url: '../program_leader/load-courseoffered.php',
                         data: {
                             search: 'search',
-                            query: query
+                            query: query,
+                            currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side
                         },
                         success: function(response) {
                             if (response == 'error') {
@@ -303,8 +323,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
-                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -328,9 +348,10 @@ include('../include/database.php');
                 let data = [];
 
                 // Get all filter values, format them into SQL query
-                const filters = [
-                    { id: '#year', format: val => `year = '${val}'` }
-                ];
+                const filters = [{
+                    id: '#year',
+                    format: val => `year = '${val}'`
+                }];
 
                 // Loop through filters, append to data array if value is not empty
                 filters.forEach(filter => {
@@ -340,10 +361,11 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-course.php",
+                    url: "../program_leader/load-courseoffered.php",
                     data: {
                         filter: "filter",
-                        data: data
+                        data: data,
+                        currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side
                     },
                     success: function(response) {
                         $('#filter-form')[0].reset(); // Reset filter form
@@ -374,8 +396,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item" data-value="${row.code}">View</a></li>
-                                                                                <li><a class="dropdown-item offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Offer this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -390,34 +412,24 @@ include('../include/database.php');
                 })
             })
 
-            // Event listener for offer button
-            $(document).on("click", ".offer-btn", function(e) {
+            // Event listener for manage button
+            $(document).on("click", ".manage-btn", function(e) {
                 e.preventDefault();
                 const coursecode = $(this).data("value"); // Get selected course's code
-                const currentdate = sessionStorage.getItem("currentdate"); // Fetch currentdate from session storage, client side
                 sessionStorage.setItem("coursecode", coursecode); // Store coursecode in session storage, client side
+                window.location.href = "../program_leader/course-manage.php"; // Redirect to course manage page
+            })
 
-                $.ajax({
-                    type: "POST",
-                    url: "../program_leader/load-offermodal.php",
-                    data: {
-                        coursecode: coursecode,
-                        currentdate: currentdate
-                    },
-                    success: function(response) {
-                        if (response == "error") {
-                            alert("This course cannot be offered currently. Please try again later."); // Alert error message
-                        } else {
-                            $('#staticBackdrop').load('../program_leader/load-offermodal.php'); // Display modal
-                        }
-                    }
-                })
+            // Event listener for remove button
+            $(document).on("click", ".remove-btn", function(e) {
+                e.preventDefault();
+                const coursecode = $(this).data("value"); // Get selected course's code
+                sessionStorage.setItem("coursecode", coursecode); // Store coursecode in session storage, client side
             })
 
             // Event listener for confirm button
             $(document).on("click", ".confirm-btn", function(e) {
                 e.preventDefault();
-                const offer = "offer";
                 const coursecode = sessionStorage.getItem("coursecode"); // Fetch the coursecode from session storage, client side
                 const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
 
@@ -425,15 +437,16 @@ include('../include/database.php');
                     type: "POST",
                     url: "../program_leader/action.php",
                     data: {
-                        offer: offer,
+                        remove: "remove",
                         coursecode: coursecode,
                         currentdate: currentdate
                     },
                     success: function(response) {
                         if (response == "success") {
-                            alert("Course offered successfully."); // Alert success message
+                            alert("Course removed successfully."); // Alert success message
+                            loadCourse(); // Load course list
                         } else if (response == "error") {
-                            alert("Failed to offer this course."); // Alert error message
+                            alert("Failed to remove this course."); // Alert error message
                         }
                     }
                 })

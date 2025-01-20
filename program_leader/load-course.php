@@ -30,9 +30,9 @@ if (isset($_POST['search']) || isset($_POST['filter'])) {
         }
     }
 } else {
-    foreach ($programmeCode as $programmecode) {
+    foreach ($programmeCode as $code) {
         // Get the course info registered under the programme
-        $course = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code WHERE course.programme = '$programmecode' ORDER BY course.name";
+        $course = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code WHERE course.programme = '$code' ORDER BY course.name";
         $result = mysqli_query($connection, $course);
     }
 }

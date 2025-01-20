@@ -23,4 +23,24 @@ if(isset($_POST["offer"])) {
         echo "error";
     }
 }
+
+// Remove course
+if(isset($_POST["remove"])) {
+    $coursecode = $_POST["coursecode"];
+    $currentdate = $_POST["currentdate"];
+
+    // Get the semester id based on current date
+    $semester = "SELECT id FROM semester WHERE start < '$currentdate' AND end > '$currentdate'";
+    $result = mysqli_query($connection, $semester);
+    $semesterid = mysqli_fetch_assoc($result);
+
+    // Add course into the course offer table
+    $remove = "DELETE FROM  course_offer WHERE course_code = '$coursecode' AND semester = '".$semesterid["id"]."'";
+    $result = mysqli_query($connection, $remove);
+    if($result) {
+        echo "success";
+    } else{
+        echo "error";
+    }
+}
 ?>
