@@ -25,20 +25,20 @@ if (isset($_POST['search']) || isset($_POST['filter'])) {
 
     if (isset($_POST['search'])) {
         foreach ($programmeCode as $code) { // Search course under the programme code
-            $offered = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND (course.code LIKE '%$query%' OR course.name LIKE '%$query%') AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
+            $offered = "SELECT course.code, course.name, course.credit_hour, course_category.image, course_offer.id FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND (course.code LIKE '%$query%' OR course.name LIKE '%$query%') AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
             $result = mysqli_query($connection, $offered);
         }
     } elseif (isset($_POST['filter'])) {
         $conditions = implode(" AND ", $query);
         foreach ($programmeCode as $code) { // Filter course under the programme code
-            $offered = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND ($conditions) AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
+            $offered = "SELECT course.code, course.name, course.credit_hour, course_category.image, course_offer.id FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND ($conditions) AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
             $result = mysqli_query($connection, $offered);
         }
     }
 } else {
     foreach ($programmeCode as $code) {
         // Get the course info offered under the programme
-        $offered = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
+        $offered = "SELECT course.code, course.name, course.credit_hour, course_category.image, course_offer.id FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course.programme = '$code' AND course.code = course_offer.course_code AND course_offer.semester = '".$semesterid['id']."' ORDER BY course.name";
         $result = mysqli_query($connection, $offered);
     }
 }

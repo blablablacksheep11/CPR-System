@@ -258,8 +258,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
-                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.id}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.id}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -323,8 +323,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
-                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.id}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.id}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -396,8 +396,8 @@ include('../include/database.php');
                                                                                 Action
                                                                             </button>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.code}">Manage</a></li>
-                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.code}">Remove this course</a></li>
+                                                                                <li><a class="dropdown-item manage-btn" data-value="${row.id}">Manage</a></li>
+                                                                                <li><a class="dropdown-item remove-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-value="${row.id}">Remove this course</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -415,22 +415,36 @@ include('../include/database.php');
             // Event listener for manage button
             $(document).on("click", ".manage-btn", function(e) {
                 e.preventDefault();
-                const coursecode = $(this).data("value"); // Get selected course's code
-                sessionStorage.setItem("coursecode", coursecode); // Store coursecode in session storage, client side
-                window.location.href = "../program_leader/course-manage.php"; // Redirect to course manage page
+                const offerid = $(this).data("value"); // Get selected course's code
+                sessionStorage.setItem("offerid", offerid); // Store offerid in session storage, client side
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/course-manage.php",
+                    data: {
+                        offerid: offerid
+                    },
+                    success: function(response) {
+                        if(response == "success"){
+                            window.location.href = "../program_leader/course-manage.php"; // Redirect to course manage page
+                        } else if(response == "error"){
+                            alert("Failed to load this course."); // Alert error message
+                        }
+                    }
+                })
             })
 
             // Event listener for remove button
             $(document).on("click", ".remove-btn", function(e) {
                 e.preventDefault();
-                const coursecode = $(this).data("value"); // Get selected course's code
-                sessionStorage.setItem("coursecode", coursecode); // Store coursecode in session storage, client side
+                const offerid = $(this).data("value"); // Get selected course's code
+                sessionStorage.setItem("offerid", offerid); // Store offerid in session storage, client side
             })
 
             // Event listener for confirm button
             $(document).on("click", ".confirm-btn", function(e) {
                 e.preventDefault();
-                const coursecode = sessionStorage.getItem("coursecode"); // Fetch the coursecode from session storage, client side
+                const offerid = sessionStorage.getItem("offerid"); // Fetch the offerid from session storage, client side
                 const currentdate = sessionStorage.getItem("currentdate"); // Fetch the currentdate from session storage, client side
 
                 $.ajax({
@@ -438,7 +452,7 @@ include('../include/database.php');
                     url: "../program_leader/action.php",
                     data: {
                         remove: "remove",
-                        coursecode: coursecode,
+                        offerid: offerid,
                         currentdate: currentdate
                     },
                     success: function(response) {

@@ -194,7 +194,11 @@ include('../include/database.php');
                                     <!-- Pop up alert that will be displayed when program leader offer a course -->
                                     <!-- The modal is hidden initially -->
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <!-- The content in load-modal will be loaded here -->
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <!-- The content in load-modal will be loaded here -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +261,7 @@ include('../include/database.php');
 
             $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
             $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
-            $('#staticBackdrop').load('../program_leader/load-offermodal.php'); // Load modal
+            $('.modal-content').load('../program_leader/load-offermodal.php'); // Load modal
             loadCourse(); // Load course list
 
             let failedMessage = `<div class="container-fluid text-center mt-3">Search failed. Please try again later.</div>`; // Message to display when search failed
@@ -328,9 +332,10 @@ include('../include/database.php');
                 let data = [];
 
                 // Get all filter values, format them into SQL query
-                const filters = [
-                    { id: '#year', format: val => `year = '${val}'` }
-                ];
+                const filters = [{
+                    id: '#year',
+                    format: val => `year = '${val}'`
+                }];
 
                 // Loop through filters, append to data array if value is not empty
                 filters.forEach(filter => {
@@ -408,7 +413,7 @@ include('../include/database.php');
                         if (response == "error") {
                             alert("This course cannot be offered currently. Please try again later."); // Alert error message
                         } else {
-                            $('#staticBackdrop').load('../program_leader/load-offermodal.php'); // Display modal
+                            $('.modal-content').load('../program_leader/load-offermodal.php'); // Display modal
                         }
                     }
                 })

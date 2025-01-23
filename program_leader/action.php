@@ -26,7 +26,7 @@ if(isset($_POST["offer"])) {
 
 // Remove course
 if(isset($_POST["remove"])) {
-    $coursecode = $_POST["coursecode"];
+    $offerid = $_POST["offerid"];
     $currentdate = $_POST["currentdate"];
 
     // Get the semester id based on current date
@@ -35,11 +35,36 @@ if(isset($_POST["remove"])) {
     $semesterid = mysqli_fetch_assoc($result);
 
     // Add course into the course offer table
-    $remove = "DELETE FROM  course_offer WHERE course_code = '$coursecode' AND semester = '".$semesterid["id"]."'";
+    $remove = "DELETE FROM  course_offer WHERE id = '$offerid' AND semester = '".$semesterid["id"]."'";
     $result = mysqli_query($connection, $remove);
     if($result) {
         echo "success";
     } else{
+        echo "error";
+    }
+}
+
+//Appoint lecturer
+if(isset($_POST["appoint"])) {
+    $lecturerid = $_POST["lecturerid"];
+    $offerid = $_POST["offerid"];
+
+    $course = "SELECT course.name FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '$offerid'";
+    $result = mysqli_query($connection, $course);
+    $coursename = mysqli_fetch_assoc($result);
+
+    $lecturer = "SELECT name FROM lecturer WHERE id = '$lecturerid'";
+    $result = mysqli_query($connection, $lecturer);
+    $lecturername = mysqli_fetch_assoc($result);
+
+    if(isset($lecturername) && isset($coursename)) {
+        $response = [];
+        $response[] = $lecturername["name"];
+        $response[] = $coursename["name"];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    } else {
         echo "error";
     }
 }
