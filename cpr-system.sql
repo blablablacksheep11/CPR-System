@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2025 at 11:25 AM
+-- Generation Time: Jan 24, 2025 at 09:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,6 +45,33 @@ INSERT INTO `academic_administrator` (`id`, `name`, `email`, `password`, `depart
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `clo`
+--
+
+CREATE TABLE `clo` (
+  `id` int(11) NOT NULL,
+  `details` varchar(500) NOT NULL,
+  `weightage` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `clo`
+--
+
+INSERT INTO `clo` (`id`, `details`, `weightage`) VALUES
+(1, 'Prepare quality report using word processing and presentation graphics\nsoftware.', 20),
+(2, 'Manipulate the formula use in worksheets.', 50),
+(3, 'Demonstrate in a group programming concept using open source javascript.', 30),
+(4, 'Explain computer architecture concepts related to design of modern processors, memories and I/O.', 20),
+(5, 'Analyze the performance of commercially available computers.', 50),
+(6, 'Construct logic for assembly language programming.', 30),
+(7, 'Comprehend Web Programming Languages of HTML, CSS, JavaScript and PHP.', 20),
+(8, 'Build an integrated Web Applications via group project experience.', 50),
+(9, 'Apply Web Applications using Web Programming Languages', 30);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `course`
 --
 
@@ -56,39 +83,40 @@ CREATE TABLE `course` (
   `programme` varchar(30) NOT NULL,
   `credit_hour` int(11) NOT NULL DEFAULT 3,
   `level` varchar(30) NOT NULL,
-  `year` int(11) NOT NULL
+  `year` int(11) NOT NULL,
+  `clos` varchar(15) NOT NULL DEFAULT 'UNDEFINED'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `course`
 --
 
-INSERT INTO `course` (`id`, `code`, `name`, `department`, `programme`, `credit_hour`, `level`, `year`) VALUES
-(1, 'DMS4024', 'BIG DATA TECHNOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 2),
-(2, 'PRG4033', 'INTRODUCTION TO INTERNET PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2),
-(3, 'PRG4064', 'INTRODUCTION TO PYTHON PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2),
-(4, 'SDD4063', 'USER EXPERIENCE(UX) DESIGN', 'EBIT', 'DIIT', 3, 'Diploma', 2),
-(5, 'ITN4023', 'APPLIED DIGITAL SKILLS', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(6, 'COM4013', 'COMPUTER ORGANIZATION', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(7, 'DCN4013', 'DATA COMMUNICATION AND NETWORKING', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(8, 'DMS4013', 'DATABASE MANAGEMENT SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(9, 'IOS4013', 'INTRODUCTION TO OPERATING SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(10, 'PRG4013', 'PROGRAMMING METHODOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 1),
-(11, 'AWS4023', 'ACADEMIC ENGLISH', 'GEN', '----', 3, 'Diploma', 1),
-(12, 'MPU2183', 'PENGHAYATAN ETIKA DAN PERADABAN', 'GOV', '----', 3, 'Diploma', 0),
-(13, 'MPU2243', 'GROWTH MINDSET', 'GOV', '----', 3, 'Diploma', 0),
-(14, 'MPU2353', 'INDUSTRIAL REVOLUTION 4.0 IN MALAYSIA', 'GOV', '----', 3, 'Diploma', 0),
-(15, 'MPU2432', 'CO-CURRICULUM: SUSTAINABILITY THINKING & CO-CURRICULUM MANAGEMENT', 'GOV', '----', 3, 'Diploma', 0),
-(16, 'UNDEFINED', 'UNDERSTANDING THE CHILD\'S GROWTH & DEVELOPMENT', 'ECE', 'DIECE', 3, 'Diploma', 1),
-(17, 'UNDEFINED', 'PLAY & LEARNING FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1),
-(18, 'UNDEFINED', 'PHYSICAL EDUCATION & HEALTH CARE FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1),
-(19, 'UNDEFINED', 'SAFETY & WELL-BEING FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1),
-(20, 'UNDEFINED', 'MATHEAMATICS FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1),
-(21, 'UNDEFINED', 'PRINCIPLES OF MANAGEMENT', 'HAT', 'DIHM', 3, 'Diploma', 1),
-(22, 'UNDEFINED', 'FOOD NUTRITION, HYGIENE AND SANITATION', 'HAT', 'DIHM', 3, 'Diploma', 1),
-(23, 'UNDEFINED', 'HOUSEKEEPING MANAGEMENT', 'HAT', 'DIHM', 3, 'Diploma', 1),
-(24, 'UNDEFINED', 'HOTEL TECHNOPRENEURSHIP', 'HAT', 'DIHM', 3, 'Diploma', 1),
-(25, 'UNDEFINED', 'INTRODUCTORY TO FRENCH', 'HAT', 'DIHM', 3, 'Diploma', 2);
+INSERT INTO `course` (`id`, `code`, `name`, `department`, `programme`, `credit_hour`, `level`, `year`, `clos`) VALUES
+(1, 'DMS4024', 'BIG DATA TECHNOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
+(2, 'PRG4033', 'INTRODUCTION TO INTERNET PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2, '7,8,9'),
+(3, 'PRG4064', 'INTRODUCTION TO PYTHON PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
+(4, 'SDD4063', 'USER EXPERIENCE(UX) DESIGN', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
+(5, 'ITN4023', 'APPLIED DIGITAL SKILLS', 'EBIT', 'DIIT', 3, 'Diploma', 1, '1,2,3'),
+(6, 'COM4013', 'COMPUTER ORGANIZATION', 'EBIT', 'DIIT', 3, 'Diploma', 1, '4,5,6'),
+(7, 'DCN4013', 'DATA COMMUNICATION AND NETWORKING', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
+(8, 'DMS4013', 'DATABASE MANAGEMENT SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
+(9, 'IOS4013', 'INTRODUCTION TO OPERATING SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
+(10, 'PRG4013', 'PROGRAMMING METHODOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
+(11, 'AWS4023', 'ACADEMIC ENGLISH', 'GEN', '----', 3, 'Diploma', 1, 'UNDEFINED'),
+(12, 'MPU2183', 'PENGHAYATAN ETIKA DAN PERADABAN', 'GOV', '----', 3, 'Diploma', 0, 'UNDEFINED'),
+(13, 'MPU2243', 'GROWTH MINDSET', 'GOV', '----', 3, 'Diploma', 0, 'UNDEFINED'),
+(14, 'MPU2353', 'INDUSTRIAL REVOLUTION 4.0 IN MALAYSIA', 'GOV', '----', 3, 'Diploma', 0, 'UNDEFINED'),
+(15, 'MPU2432', 'CO-CURRICULUM: SUSTAINABILITY THINKING & CO-CURRICULUM MANAGEMENT', 'GOV', '----', 3, 'Diploma', 0, 'UNDEFINED'),
+(16, 'UNDEFINED', 'UNDERSTANDING THE CHILD\'S GROWTH & DEVELOPMENT', 'ECE', 'DIECE', 3, 'Diploma', 1, 'UNDEFINED'),
+(17, 'UNDEFINED', 'PLAY & LEARNING FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1, 'UNDEFINED'),
+(18, 'UNDEFINED', 'PHYSICAL EDUCATION & HEALTH CARE FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1, 'UNDEFINED'),
+(19, 'UNDEFINED', 'SAFETY & WELL-BEING FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1, 'UNDEFINED'),
+(20, 'UNDEFINED', 'MATHEAMATICS FOR YOUNG CHILDREN', 'ECE', 'DIECE', 3, 'Diploma', 1, 'UNDEFINED'),
+(21, 'UNDEFINED', 'PRINCIPLES OF MANAGEMENT', 'HAT', 'DIHM', 3, 'Diploma', 1, 'UNDEFINED'),
+(22, 'UNDEFINED', 'FOOD NUTRITION, HYGIENE AND SANITATION', 'HAT', 'DIHM', 3, 'Diploma', 1, 'UNDEFINED'),
+(23, 'UNDEFINED', 'HOUSEKEEPING MANAGEMENT', 'HAT', 'DIHM', 3, 'Diploma', 1, 'UNDEFINED'),
+(24, 'UNDEFINED', 'HOTEL TECHNOPRENEURSHIP', 'HAT', 'DIHM', 3, 'Diploma', 1, 'UNDEFINED'),
+(25, 'UNDEFINED', 'INTRODUCTORY TO FRENCH', 'HAT', 'DIHM', 3, 'Diploma', 2, 'UNDEFINED');
 
 -- --------------------------------------------------------
 
@@ -126,18 +154,18 @@ INSERT INTO `course_category` (`id`, `code`, `name`, `department`, `image`) VALU
 CREATE TABLE `course_offer` (
   `id` int(11) NOT NULL,
   `course_code` varchar(15) NOT NULL,
-  `semester` int(11) NOT NULL
+  `semester` int(11) NOT NULL,
+  `lecturer` int(15) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `course_offer`
 --
 
-INSERT INTO `course_offer` (`id`, `course_code`, `semester`) VALUES
-(2, 'DMS4024', 1),
-(3, 'ITN4023', 1),
-(4, 'COM4013', 1),
-(6, 'DCN4013', 1);
+INSERT INTO `course_offer` (`id`, `course_code`, `semester`, `lecturer`) VALUES
+(3, 'ITN4023', 1, 1),
+(4, 'COM4013', 1, 2),
+(7, 'PRG4033', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -303,6 +331,12 @@ ALTER TABLE `academic_administrator`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `clo`
+--
+ALTER TABLE `clo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `course`
 --
 ALTER TABLE `course`
@@ -367,6 +401,12 @@ ALTER TABLE `academic_administrator`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `clo`
+--
+ALTER TABLE `clo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
@@ -382,7 +422,7 @@ ALTER TABLE `course_category`
 -- AUTO_INCREMENT for table `course_offer`
 --
 ALTER TABLE `course_offer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -394,7 +434,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `lecturer`
 --
 ALTER TABLE `lecturer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `programme`
