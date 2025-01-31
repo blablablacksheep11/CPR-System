@@ -27,6 +27,8 @@ include("../include/database.php");
             if ($result) {
                 if (mysqli_num_rows($result) > 0) {
                     $counter = 1;
+
+                    // Display lecturer info in list
                     while ($lecturerdetail = mysqli_fetch_assoc($result)) {
             ?>
                         <tr>

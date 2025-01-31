@@ -2,7 +2,6 @@
 session_start();
 include('../include/database.php');
 
-$counter = 1;
 $programmeCode = [];
 $courses = [];
 

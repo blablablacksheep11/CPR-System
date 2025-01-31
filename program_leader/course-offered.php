@@ -420,13 +420,13 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/course-manage.php",
+                    url: "../program_leader/course-manage-overview.php",
                     data: {
                         offerid: offerid
                     },
                     success: function(response) {
                         if(response == "success"){
-                            window.location.href = "../program_leader/course-manage.php"; // Redirect to course manage page
+                            window.location.href = "../program_leader/course-manage-overview.php"; // Redirect to course manage page
                         } else if(response == "error"){
                             alert("Failed to load this course."); // Alert error message
                         }

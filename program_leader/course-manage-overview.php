@@ -115,6 +115,7 @@ if (isset($_POST['offerid'])) {
                                 <div class="container-fluid p-0 ps-3 m-0">
                                     <p class="fs-6 m-0 p-0">
                                         <?php
+                                        // Get semester info of current course
                                         $semester = "SELECT semester FROM course_offer WHERE id = '" . $_SESSION['offerid'] . "'";
                                         $result = mysqli_query($connection, $semester);
                                         $semesterid = mysqli_fetch_assoc($result);
@@ -123,6 +124,7 @@ if (isset($_POST['offerid'])) {
                                         $result = mysqli_query($connection, $semester);
                                         $semesterdetail = mysqli_fetch_assoc($result);
 
+                                        // Get course code of current course
                                         $course = "SELECT course_code FROM course_offer WHERE id = '" . $_SESSION['offerid'] . "'";
                                         $result = mysqli_query($connection, $course);
                                         $coursecode = mysqli_fetch_assoc($result);
@@ -132,6 +134,7 @@ if (isset($_POST['offerid'])) {
                                     </p>
                                     <p class="fs-3 m-0 p-0 fst-italic">
                                         <?php
+                                        // Get name of current course
                                         $course = "SELECT course.* FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
                                         $result = mysqli_query($connection, $course);
                                         $courseinfo = mysqli_fetch_assoc($result);
@@ -157,6 +160,7 @@ if (isset($_POST['offerid'])) {
 
                             <div class="row m-0 p-0 pt-3 bg-white" id="course-container">
                                 <div class="container">
+                                    <!-- Row to carry lecturer name -->
                                     <div class="row m-0 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0 d-flex align-items-center">
                                             <label class="col-form-label p-0 m-0">Lecturer:</label>
@@ -175,6 +179,7 @@ if (isset($_POST['offerid'])) {
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course name -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
                                             <label for="inputPassword6" class="col-form-label p-0 m-0">Course Name:</label>
@@ -184,6 +189,7 @@ if (isset($_POST['offerid'])) {
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course code -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
                                             <label for="inputPassword6" class="col-form-label p-0 m-0">Course Code:</label>
@@ -193,6 +199,7 @@ if (isset($_POST['offerid'])) {
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course credit hour -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
                                             <label for="inputPassword6" class="col-form-label p-0 m-0">Credit Hours:</label>
@@ -202,12 +209,14 @@ if (isset($_POST['offerid'])) {
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course clo (label) -->
                                     <div class="row m-0 mt-2 p-0 py-2 gap-2 align-items-center">
                                         <div class="col-2 p-0 m-0 align-items-center">
                                             <label for="inputPassword6" class="col-form-label p-0 m-0">Learning Outcomes:</label>
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course clo (content) -->
                                     <div class="row m-0 p-0 gap-2 align-items-center">
                                         <table class="table table-hover">
                                             <thead>
@@ -219,13 +228,15 @@ if (isset($_POST['offerid'])) {
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                // Get the clos registered under current course
                                                 $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
                                                 $result = mysqli_query($connection, $clo);
                                                 $cloid = mysqli_fetch_assoc($result);
-                                                $cloid = explode(",", $cloid['clos']);
+                                                $cloid = explode(",", $cloid['clos']); // Break the clos into individual pieces
 
                                                 $counter = 1;
 
+                                                // Fetch info of each individual clo
                                                 foreach ($cloid as $id) {
                                                     $clo = "SELECT * FROM clo WHERE id = '$id'";
                                                     $result = mysqli_query($connection, $clo);
@@ -246,19 +257,21 @@ if (isset($_POST['offerid'])) {
                                                     <th class="py-3">Total</th>
                                                     <th class="py-3 text-center">
                                                         <?php
+                                                        // Get the clos registered under current course
                                                         $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
                                                         $result = mysqli_query($connection, $clo);
                                                         $cloid = mysqli_fetch_assoc($result);
                                                         $cloid = explode(",", $cloid['clos']);
 
                                                         $sum = 0;
+                                                        // Sum up the weightage of all clos
                                                         foreach ($cloid as $id) {
                                                             $weightage = "SELECT weightage FROM clo WHERE id = '$id'";
                                                             $result = mysqli_query($connection, $weightage);
                                                             $weightage = mysqli_fetch_assoc($result);
                                                             $sum += $weightage['weightage'];
                                                         }
-                                                        echo $sum;
+                                                        echo $sum; // Output the total weightage
                                                         ?>
                                                     </th>
                                                 </tr>
@@ -281,10 +294,11 @@ if (isset($_POST['offerid'])) {
                 $('#row-lecturer').load('../program_leader/load-lecturername.php'); // Load lecturer name
                 const offerid = sessionStorage.getItem('offerid'); // Get offerid from session storage
 
+                // Event listener for select button 
                 $(document).on("click", ".select-btn", function(e) {
                     e.preventDefault();
                     const lecturerid = $(this).val();
-                    sessionStorage.setItem("lecturerid", lecturerid);
+                    sessionStorage.setItem("lecturerid", lecturerid); // Set lecturerid in session storage
 
                     $.ajax({
                         type: "POST",
@@ -299,7 +313,8 @@ if (isset($_POST['offerid'])) {
                                 alert("Failed to select lecturer. Please try again later.");
                                 window.location.reload();
                             } else {
-                                $(".modal-dialog").removeClass("modal-lg");
+                                // Update modal content
+                                $(".modal-dialog").removeClass("modal-lg"); // Reduce modal size
                                 $(".modal-content").html(`<div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Assign lecturer</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -316,18 +331,22 @@ if (isset($_POST['offerid'])) {
                     })
                 })
 
+                // Event listener for reselect button
                 $(document).on("click", ".reselect-btn", function(e) {
                     e.preventDefault();
-                    $(".modal-dialog").addClass("modal-lg");
+                    // Reset modal
+                    $(".modal-dialog").addClass("modal-lg"); // Increase modal size
                     $('.modal-content').load('../program_leader/load-assignmodal.php');
                 })
 
+                // Event listener for assign button
                 $(document).on("click", ".assign-btn", function(e) {
                     e.preventDefault();
-                    $(".modal-dialog").addClass("modal-lg");
+                    $(".modal-dialog").addClass("modal-lg"); // Increase modal size
                     $('.modal-content').load('../program_leader/load-assignmodal.php');
                 })
 
+                // Event listener for confirm assign button
                 $(document).on("click", ".assign-btn2", function(e) {
                     e.preventDefault();
                     const lecturerid = sessionStorage.getItem("lecturerid");
@@ -343,7 +362,7 @@ if (isset($_POST['offerid'])) {
                         },
                         success: function(response) {
                             if (response == "success") {
-                                $('#row-lecturer').load('../program_leader/load-lecturername.php');
+                                $('#row-lecturer').load('../program_leader/load-lecturername.php'); // Load lecturer name
                             } else if (response == "error") {
                                 alert("Failed to assign lecturer. Please try again later.");
                             }
