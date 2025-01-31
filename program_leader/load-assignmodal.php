@@ -21,6 +21,7 @@ include("../include/database.php");
         </thead>
         <tbody>
             <?php
+            // Fetch lecturer info
             $lecturer = "SELECT * FROM lecturer ORDER BY name";
             $result = mysqli_query($connection, $lecturer);
             if ($result) {

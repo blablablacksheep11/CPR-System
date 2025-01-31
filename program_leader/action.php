@@ -44,15 +44,17 @@ if(isset($_POST["remove"])) {
     }
 }
 
-//Appoint lecturer
-if(isset($_POST["appoint"])) {
+// Select lecturer
+if(isset($_POST["select"])) {
     $lecturerid = $_POST["lecturerid"];
     $offerid = $_POST["offerid"];
 
+    // Get the cours name of the current course
     $course = "SELECT course.name FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '$offerid'";
     $result = mysqli_query($connection, $course);
     $coursename = mysqli_fetch_assoc($result);
 
+    // Get the name of the selected lecturer
     $lecturer = "SELECT name FROM lecturer WHERE id = '$lecturerid'";
     $result = mysqli_query($connection, $lecturer);
     $lecturername = mysqli_fetch_assoc($result);
@@ -64,6 +66,22 @@ if(isset($_POST["appoint"])) {
 
         header('Content-Type: application/json');
         echo json_encode($response);
+    } else {
+        echo "error";
+    }
+}
+
+// Assign lecturer
+if(isset($_POST["assign"])) {
+    $lecturerid = $_POST["lecturerid"];
+    $offerid = $_POST["offerid"];
+
+    // Assign lecturer to current course
+    $assign = "UPDATE course_offer SET lecturer = '$lecturerid' WHERE id = '$offerid'";
+    $result = mysqli_query($connection, $assign);
+
+    if($result){
+        echo "success";
     } else {
         echo "error";
     }

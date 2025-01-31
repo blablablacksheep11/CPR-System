@@ -162,26 +162,7 @@ if (isset($_POST['offerid'])) {
                                             <label class="col-form-label p-0 m-0">Lecturer:</label>
                                         </div>
                                         <div class="col-auto p-0 m-0">
-                                            <div class="p-0 m-0">
-                                                <?php
-                                                $lecturer = "SELECT lecturer.* FROM lecturer INNER JOIN course_offer on lecturer.id = course_offer.lecturer WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
-                                                $result = mysqli_query($connection, $lecturer);
-                                                if (mysqli_num_rows($result) == 0) {
-                                                    $lecturername = "No lecturer assigned";
-                                                    echo $lecturername;
-                                                ?>
-                                                    <a class="btn btn-primary ms-2 appoint-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Appoint lecturer</a>
-                                                <?php
-                                                } else {
-                                                    $lecturername = mysqli_fetch_assoc($result);
-                                                    $lecturergender = $lecturername['gender'];
-                                                    $lecturername = $lecturername['name'];
-                                                    echo $lecturername; ?>
-                                                    &nbsp;<i class="bi <?php echo $lecturergender === 'female' ? 'bi-gender-female' : 'bi-gender-male'; ?>"></i>
-                                                <?php
-                                                }
-                                                ?>
-
+                                            <div class="p-0 m-0" id="row-lecturer">
                                             </div>
                                         </div>
                                     </div>
@@ -233,7 +214,7 @@ if (isset($_POST['offerid'])) {
                                                 <tr>
                                                     <th scope="col">CLO</th>
                                                     <th scope="col">Description</th>
-                                                    <th scope="col">Weightage (%)</th>
+                                                    <th scope="col" class="text-center">Weightage (%)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -253,12 +234,35 @@ if (isset($_POST['offerid'])) {
                                                     <tr>
                                                         <th class="py-3"><?php echo $counter; ?></th>
                                                         <td class="py-3"><?php echo $clodetail['details']; ?></td>
-                                                        <td class="py-3"><?php echo $clodetail['weightage']; ?></td>
+                                                        <td class="py-3 text-center"><?php echo $clodetail['weightage']; ?></td>
                                                     </tr>
                                                 <?php
                                                     $counter++;
                                                 } ?>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th class="py-3"></th>
+                                                    <th class="py-3">Total</th>
+                                                    <th class="py-3 text-center">
+                                                        <?php
+                                                        $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
+                                                        $result = mysqli_query($connection, $clo);
+                                                        $cloid = mysqli_fetch_assoc($result);
+                                                        $cloid = explode(",", $cloid['clos']);
+
+                                                        $sum = 0;
+                                                        foreach ($cloid as $id) {
+                                                            $weightage = "SELECT weightage FROM clo WHERE id = '$id'";
+                                                            $result = mysqli_query($connection, $weightage);
+                                                            $weightage = mysqli_fetch_assoc($result);
+                                                            $sum += $weightage['weightage'];
+                                                        }
+                                                        echo $sum;
+                                                        ?>
+                                                    </th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -273,18 +277,20 @@ if (isset($_POST['offerid'])) {
             $(document).ready(function() {
                 $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
                 $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
-                $('.modal-content').load('../program_leader/load-appointmodal.php');
-                const offerid = sessionStorage.getItem('offerid');
+                $('.modal-content').load('../program_leader/load-assignmodal.php'); // Load modal
+                $('#row-lecturer').load('../program_leader/load-lecturername.php'); // Load lecturer name
+                const offerid = sessionStorage.getItem('offerid'); // Get offerid from session storage
 
                 $(document).on("click", ".select-btn", function(e) {
                     e.preventDefault();
                     const lecturerid = $(this).val();
+                    sessionStorage.setItem("lecturerid", lecturerid);
 
                     $.ajax({
                         type: "POST",
                         url: "../program_leader/action.php",
                         data: {
-                            appoint: "appoint",
+                            select: "select",
                             offerid: offerid,
                             lecturerid: lecturerid
                         },
@@ -295,31 +301,54 @@ if (isset($_POST['offerid'])) {
                             } else {
                                 $(".modal-dialog").removeClass("modal-lg");
                                 $(".modal-content").html(`<div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Appoint lecturer</h1>
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Assign lecturer</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body" id="modal-body-2">
-                                                Confirm appointing ${response[0]} as the lecturer for ${response[1]}?
+                                                Confirm assigning ${response[0]} as the lecturer for ${response[1]}?
                                                 </div>
                                                 <div class="modal-footer border border-0">
                                                     <button class="btn btn-secondary reselect-btn">Reselect</button>
-                                                    <button type="button" class="btn btn-primary">Appoint</button>
+                                                    <button type="button" class="btn btn-primary assign-btn2" data-bs-dismiss="modal">Assign</button>
                                                 </div>`);
                             }
                         }
                     })
                 })
 
-                $(document).on("click", ".reselect-btn", function(e){
+                $(document).on("click", ".reselect-btn", function(e) {
                     e.preventDefault();
                     $(".modal-dialog").addClass("modal-lg");
-                    $('.modal-content').load('../program_leader/load-appointmodal.php');
+                    $('.modal-content').load('../program_leader/load-assignmodal.php');
                 })
 
-                $(document).on("click", ".appoint-btn", function(e){
+                $(document).on("click", ".assign-btn", function(e) {
                     e.preventDefault();
                     $(".modal-dialog").addClass("modal-lg");
-                    $('.modal-content').load('../program_leader/load-appointmodal.php');
+                    $('.modal-content').load('../program_leader/load-assignmodal.php');
+                })
+
+                $(document).on("click", ".assign-btn2", function(e) {
+                    e.preventDefault();
+                    const lecturerid = sessionStorage.getItem("lecturerid");
+                    const offerid = sessionStorage.getItem("offerid");
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../program_leader/action.php",
+                        data: {
+                            assign: "assign",
+                            lecturerid: lecturerid,
+                            offerid: offerid
+                        },
+                        success: function(response) {
+                            if (response == "success") {
+                                $('#row-lecturer').load('../program_leader/load-lecturername.php');
+                            } else if (response == "error") {
+                                alert("Failed to assign lecturer. Please try again later.");
+                            }
+                        }
+                    })
                 })
             })
         </script>
