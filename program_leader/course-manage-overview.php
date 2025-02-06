@@ -166,7 +166,7 @@ if (isset($_POST['offerid'])) {
                                             <label class="col-form-label p-0 m-0">Lecturer:</label>
                                         </div>
                                         <div class="col-auto p-0 m-0">
-                                            <div class="p-0 m-0" id="row-lecturer">
+                                            <div class="p-0 m-0 d-flex align-items-center" id="row-lecturer">
                                             </div>
                                         </div>
                                     </div>
@@ -288,10 +288,33 @@ if (isset($_POST['offerid'])) {
         <!-- Functional script -->
         <script>
             $(document).ready(function() {
+                function loadLecturer() {
+                    $.ajax({
+                        type: "POST",
+                        url: "../program_leader/action.php",
+                        data: {
+                            load: "load",
+                            offerid: sessionStorage.getItem("offerid")
+                        },
+                        success: function(response) {
+                            if (response == "error") {
+                                $("#row-lecturer").html(`<p class="p-0 m-0">Failed to load lecturer name. Please try again.</p>`);
+                            } else if (response == "empty") {
+                                $("#row-lecturer").html(`<p class="p-0 m-0">No lecturer assigned.</p>
+                                                         <a class="btn btn-primary ms-2 assign-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Assign lecturer</a> `);
+                            } else {
+                                $("#row-lecturer").html(`<p class="p-0 m-0">${response[0]}</p>
+                                                         &nbsp;<i class="bi ${response[1] === 'female' ? 'bi-gender-female' : 'bi-gender-male'}"></i>
+                                                         <a class="btn btn-primary ms-2 assign-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Reassign lecturer</a>`);
+                            }
+                        }
+                    })
+                }
+
                 $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
                 $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
                 $('.modal-content').load('../program_leader/load-assignmodal.php'); // Load modal
-                $('#row-lecturer').load('../program_leader/load-lecturername.php'); // Load lecturer name
+                loadLecturer() // Load lecturer name
                 const offerid = sessionStorage.getItem('offerid'); // Get offerid from session storage
 
                 // Event listener for select button 
@@ -362,7 +385,7 @@ if (isset($_POST['offerid'])) {
                         },
                         success: function(response) {
                             if (response == "success") {
-                                $('#row-lecturer').load('../program_leader/load-lecturername.php'); // Load lecturer name
+                                loadLecturer() // Reload lecturer name
                             } else if (response == "error") {
                                 alert("Failed to assign lecturer. Please try again later.");
                             }
