@@ -26,11 +26,6 @@ if (isset($_POST['offerid'])) {
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <style>
-            .form-control:focus {
-                box-shadow: none !important;
-                border-color: rgba(203, 208, 221, 0.54) !important;
-            }
-
             .bi-gender-female {
                 color: #ff69b4;
             }
@@ -146,10 +141,10 @@ if (isset($_POST['offerid'])) {
                                 <div class="container-fluid p-0 ps-3 m-0 d-flex align-items-end">
                                     <ul class="nav nav-underline">
                                         <li class="nav-item">
-                                            <a class="nav-link active" aria-current="page">Overview</a>
+                                            <a class="nav-link active" href="../program_leader/course-manage-overview.php">Overview</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link">Student</a>
+                                            <a class="nav-link" href="../program_leader/course-manage-student.php">Student</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link">Grades</a>

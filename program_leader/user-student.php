@@ -259,7 +259,7 @@ include('../include/database.php');
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tbody">
                                         <!-- Student list will be loaded here -->
                                     </tbody>
                                 </table>
@@ -277,16 +277,19 @@ include('../include/database.php');
             function loadStudent() {
                 $.ajax({
                     type: 'POST',
-                    url: '../program_leader/load-student.php',
+                    url: '../program_leader/action.php', 
+                    data: {
+                        student: "student"
+                    },
                     success: function(response) {
                         if (response == 'error') {
-                            $('tbody').html(failedMessage); // Display failed message
+                            $('#tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                $('tbody').html(emptyMessage); // Display empty message
+                                $('#tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
-                                $('tbody').html(
+                                $('#tbody').html(
                                     response.map(function(row) { // Display search result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
@@ -315,8 +318,8 @@ include('../include/database.php');
             loadStudent(); // Load student list
 
 
-            let failedMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
-            let emptyMessage = `<tr><td colspan="6" class="text-center py-3 border border-0">No student found.</td></tr>`; // Message to display when no student found
+            let failedMessage = `<tr><td colspan="7" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
+            let emptyMessage = `<tr><td colspan="7" class="text-center py-3 border border-0">No student found.</td></tr>`; // Message to display when no student found
 
             // Event listener for search bar
             $(document).on('input', '#searchbar-input', function(e) {
@@ -326,20 +329,21 @@ include('../include/database.php');
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/load-student.php',
+                        url: '../program_leader/action.php',
                         data: {
+                            student: "student",
                             search: 'search',
                             query: query
                         },
                         success: function(response) {
                             if (response == 'error') {
-                                $('tbody').html(failedMessage); // Display failed message
+                                $('#tbody').html(failedMessage); // Display failed message
                             } else {
                                 if (response == 'empty') {
-                                    $('tbody').html(emptyMessage); // Display empty message
+                                    $('#tbody').html(emptyMessage); // Display empty message
                                 } else {
                                     let counter = 1;
-                                    $('tbody').html(
+                                    $('#tbody').html(
                                         response.map(function(row) { // Display search result
                                             return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
@@ -373,20 +377,21 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-student.php",
+                    url: "../program_leader/action.php",
                     data: {
+                        student: "student",
                         sort: "sort",
                         query: query
                     },
                     success: function(response) {
                         if (response == 'error') {
-                            $('tbody').html(failedMessage); // Display failed message
+                            $('#tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                $('tbody').html(emptyMessage); // Display empty message
+                                $('#tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
-                                $('tbody').html(
+                                $('#tbody').html(
                                     response.map(function(row) { // Display sort result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;
@@ -434,8 +439,9 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-student.php",
+                    url: "../program_leader/action.php",
                     data: {
+                        student: "student",
                         filter: "filter",
                         data: data
                     },
@@ -443,13 +449,13 @@ include('../include/database.php');
                         $('#filter-form')[0].reset(); // Reset filter form
                         $('#dropdown-menu').removeClass('show'); // Hide filter dropdown
                         if (response == 'error') {
-                            $('tbody').html(failedMessage); // Display failed message
+                            $('#tbody').html(failedMessage); // Display failed message
                         } else {
                             if (response == 'empty') {
-                                $('tbody').html(emptyMessage); // Display empty message
+                                $('#tbody').html(emptyMessage); // Display empty message
                             } else {
                                 let counter = 1;
-                                $('tbody').html(
+                                $('#tbody').html(
                                     response.map(function(row) { // Display filter result
                                         return `<tr>
                                                     <th class='py-3' scope='row'>${counter++}</th>;

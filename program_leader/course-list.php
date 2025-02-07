@@ -215,7 +215,10 @@ include('../include/database.php');
             function loadCourse() {
                 $.ajax({
                     type: 'POST',
-                    url: '../program_leader/load-course.php',
+                    url: '../program_leader/action.php',
+                    data: {
+                        course: "course"
+                    },
                     success: function(response) {
                         if (response == 'error') {
                             $('#course-list').html(failedMessage); // Display failed message
@@ -275,8 +278,9 @@ include('../include/database.php');
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/load-course.php',
+                        url: '../program_leader/action.php',
                         data: {
+                            course: "course",
                             search: 'search',
                             query: query
                         },
@@ -345,8 +349,9 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-course.php",
+                    url: "../program_leader/action.php",
                     data: {
+                        course: "course",
                         filter: "filter",
                         data: data
                     },

@@ -227,8 +227,9 @@ include('../include/database.php');
             function loadCourse() {
                 $.ajax({
                     type: 'POST',
-                    url: '../program_leader/load-courseoffered.php',
+                    url: '../program_leader/action.php',
                     data: {
+                        courseoffered: "courseoffered",
                         currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side
                     },
                     success: function(response) {
@@ -290,8 +291,9 @@ include('../include/database.php');
                 if (query.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '../program_leader/load-courseoffered.php',
+                        url: '../program_leader/action.php',
                         data: {
+                            courseoffered: "courseoffered",
                             search: 'search',
                             query: query,
                             currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side
@@ -361,8 +363,9 @@ include('../include/database.php');
 
                 $.ajax({
                     type: "POST",
-                    url: "../program_leader/load-courseoffered.php",
+                    url: "../program_leader/action.php",
                     data: {
+                        courseoffered: "courseoffered",
                         filter: "filter",
                         data: data,
                         currentdate: sessionStorage.getItem("currentdate") // Fetch the currentdate from session storage, client side

@@ -5,7 +5,7 @@ include("../include/database.php");
 
 <div class="modal-header border border-0">
     <h1 class="modal-title fs-5" id="staticBackdropLabel">
-        Lecturer List
+        Student List
     </h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -14,15 +14,31 @@ include("../include/database.php");
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Position</th>
-                <th scope="col">Action</th>
+                <th scope="col">Intake</th>
             </tr>
         </thead>
         <tbody>
             <?php
+            $programmeCode = [];
+            $students = [];
+
+            // Get the programme the register under the program leader
+            $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "'";
+            $result = mysqli_query($connection, $programme);
+
+            while ($programmeinfo = mysqli_fetch_assoc($result)) {
+                $programmeCode[] = $programmeinfo['code']; // Store the programme code in an array
+            }
+
+            foreach ($programmeCode as $code) {
+                $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY name";
+                $result = mysqli_query($connection, $student);
+            }
+            
             // Fetch lecturer info
-            $lecturer = 'SELECT * FROM lecturer WHERE department = "' . $_SESSION['department'] . '" ORDER BY name';
+            $lecturer = 'SELECT * FROM  WHERE department = "' . $_SESSION['department'] . '" ORDER BY name';
             $result = mysqli_query($connection, $lecturer);
             if ($result) {
                 if (mysqli_num_rows($result) > 0) {
