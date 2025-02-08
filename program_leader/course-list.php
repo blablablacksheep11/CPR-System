@@ -171,6 +171,19 @@ include('../include/database.php');
                                                         }
                                                         ?>
                                                     </select>
+
+                                                    <!-- Programme filtration-->
+                                                    <label for="programme" class="form-label text-secondary mt-2 m-0">Programme</label>
+                                                    <select class="form-select" id="programme">
+                                                        <option selected disabled hidden>Programme</option>
+                                                        <?php
+                                                        $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "' ORDER BY name";
+                                                        $result = mysqli_query($connection, $programme);
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            echo "<option value='" . $row['code'] . "'>" . $row['name'] . "</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
                                                     <div class="mt-3 d-flex justify-content-end">
                                                         <input type="reset" class="btn btn-outline-dark me-2">
                                                         <input type="submit" class="btn btn-primary" id="filter-submit" value="Apply">
@@ -233,7 +246,7 @@ include('../include/database.php');
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
                                                             <div class="card-body p-0 m-0">
                                                                 <div class="row w-100 p-0 px-3 m-0 mt-1">
-                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
+                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}___${row.programme}</p>
                                                                     <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
                                                                 </div>
                                                                 <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">
@@ -298,7 +311,7 @@ include('../include/database.php');
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
                                                             <div class="card-body p-0 m-0">
                                                                 <div class="row w-100 p-0 px-3 m-0 mt-1">
-                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
+                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}___${row.programme}</p>
                                                                     <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
                                                                 </div>
                                                                 <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">
@@ -337,9 +350,14 @@ include('../include/database.php');
 
                 // Get all filter values, format them into SQL query
                 const filters = [{
-                    id: '#year',
-                    format: val => `year = '${val}'`
-                }];
+                        id: '#year',
+                        format: val => `year = '${val}'`
+                    },
+                    {
+                        id: '#programme',
+                        format: val => `programme = '${val}'`
+                    }
+                ];
 
                 // Loop through filters, append to data array if value is not empty
                 filters.forEach(filter => {
@@ -371,7 +389,7 @@ include('../include/database.php');
                                                             <img src="../media/${row.image}" class="card-img-top" alt="${row.name}">
                                                             <div class="card-body p-0 m-0">
                                                                 <div class="row w-100 p-0 px-3 m-0 mt-1">
-                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}</p>
+                                                                    <p class="card-text fs-6 text-body-secondary m-0 p-0 text-start" id="code">${row.code}___${row.programme}</p>
                                                                     <p class="card-text fw-bold fs-6 m-0 p-0 text-start" id="name">${row.name}</p>
                                                                 </div>
                                                                 <div class="row w-100 p-0 px-3 m-0 mb-2 position-absolute bottom-0 d-flex justify-content-between">

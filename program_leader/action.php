@@ -141,7 +141,7 @@ if (isset($_POST["course"])) {
     $courses = [];
 
     // Get the programme the register under the program leader
-    $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "'";
+    $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "' ORDER BY name";
     $result = mysqli_query($connection, $programme);
 
     while ($programmeinfo = mysqli_fetch_assoc($result)) {
@@ -155,12 +155,32 @@ if (isset($_POST["course"])) {
             foreach ($programmeCode as $code) { // Search course under the programme code
                 $course = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code WHERE course.programme = '$code' AND (course.code LIKE '%$query%' OR course.name LIKE '%$query%') ORDER BY course.name";
                 $result = mysqli_query($connection, $course);
+                if ($result) {
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($courseinfo = mysqli_fetch_assoc($result)) {
+                            $courses[] = $courseinfo; // Store the course information in an array
+                        }
+                    }
+                } else {
+                    $courses = "error";
+                    break;
+                }
             }
         } elseif (isset($_POST['filter'])) {
             $conditions = implode(" AND ", $query);
             foreach ($programmeCode as $code) { // Filter course under the programme code
                 $course = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code WHERE course.programme = '$code' AND ($conditions) ORDER BY course.name";
                 $result = mysqli_query($connection, $course);
+                if ($result) {
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($courseinfo = mysqli_fetch_assoc($result)) {
+                            $courses[] = $courseinfo; // Store the course information in an array
+                        }
+                    }
+                } else {
+                    $courses = "error";
+                    break;
+                }
             }
         }
     } else {
@@ -168,22 +188,25 @@ if (isset($_POST["course"])) {
             // Get the course info registered under the programme
             $course = "SELECT course.*, course_category.image FROM course INNER JOIN course_category ON SUBSTRING(course.code,1,3) = course_category.code WHERE course.programme = '$code' ORDER BY course.name";
             $result = mysqli_query($connection, $course);
+            if ($result) {
+                if (mysqli_num_rows($result) > 0) {
+                    while ($courseinfo = mysqli_fetch_assoc($result)) {
+                        $courses[] = $courseinfo; // Store the course information in an array
+                    }
+                }
+            } else {
+                $courses = "error";
+                break;
+            }
         }
     }
 
-    if ($result) {
-        if (mysqli_num_rows($result) == 0) {
-            echo "empty";  // Return empty
-        } else {
-            while ($courseinfo = mysqli_fetch_assoc($result)) {
-                $courses[] = $courseinfo; // Store the course information in an array
-            }
-            header('Content-Type: application/json');
-            echo json_encode($courses);
-        }
-    } else {
-        echo "error";
+    if (empty($courses) && $courses != "error") {
+        $courses = "empty";
     }
+
+    header('Content-Type: application/json');
+    echo json_encode($courses);
 }
 
 // Load course offered
