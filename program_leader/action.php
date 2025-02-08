@@ -52,7 +52,7 @@ if (isset($_POST["student"])) {
     $students = [];
 
     // Get the programme the register under the program leader
-    $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "'";
+    $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "' ORDER BY name";
     $result = mysqli_query($connection, $programme);
 
     while ($programmeinfo = mysqli_fetch_assoc($result)) {
@@ -66,39 +66,73 @@ if (isset($_POST["student"])) {
             foreach ($programmeCode as $code) { // Search student under the programme code
                 $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' AND (student.student_id LIKE '%$query%' OR student.name LIKE '%$query%' OR student.email LIKE '%$query%') ORDER BY student.name";
                 $result = mysqli_query($connection, $student);
+                if ($result) {
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($studentinfo = mysqli_fetch_assoc($result)) {
+                            $students[] = $studentinfo; // Store the student information in an array
+                        }
+                    }
+                } else {
+                    $students = "error";
+                    break;
+                }
             }
         } elseif (isset($_POST['sort'])) {
-            foreach ($programmeCode as $code) { // Sort student under the programme code
-                $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY $query, student.name";
-                $result = mysqli_query($connection, $student);
+            // Convert the array into a string format for SQL
+            $programList = "'" . implode("', '", $programmeCode) . "'";
+
+            // Sort student under the programme code
+            $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme IN ($programList) ORDER BY $query, student.name";
+            $result = mysqli_query($connection, $student);
+            if ($result) {
+                if (mysqli_num_rows($result) > 0) {
+                    while ($studentinfo = mysqli_fetch_assoc($result)) {
+                        $students[] = $studentinfo; // Store the student information in an array
+                    }
+                }
+            } else {
+                $students = "error";
             }
         } elseif (isset($_POST['filter'])) {
             $conditions = implode(" AND ", $query);
             foreach ($programmeCode as $code) { // Filter student under the programme code
                 $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' AND ($conditions) ORDER BY student.name";
                 $result = mysqli_query($connection, $student);
+                if ($result) {
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($studentinfo = mysqli_fetch_assoc($result)) {
+                            $students[] = $studentinfo; // Store the student information in an array
+                        }
+                    }
+                } else {
+                    $students = "error";
+                    break;
+                }
             }
         }
     } else {
         foreach ($programmeCode as $code) {
             $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY name";
             $result = mysqli_query($connection, $student);
+            if ($result) {
+                if (mysqli_num_rows($result) > 0) {
+                    while ($studentinfo = mysqli_fetch_assoc($result)) {
+                        $students[] = $studentinfo; // Store the student information in an array
+                    }
+                }
+            } else {
+                $students = "error";
+                break;
+            }
         }
     }
 
-    if ($result) {
-        if (mysqli_num_rows($result) == 0) {
-            echo "empty"; // Return empty
-        } else {
-            while ($studentinfo = mysqli_fetch_assoc($result)) {
-                $students[] = $studentinfo; // Store the student information in an array
-            }
-            header('Content-Type: application/json');
-            echo json_encode($students);
-        }
-    } else {
-        echo "error";
+    if (empty($students) && $students != "error") {
+        $students = "empty";
     }
+
+    header('Content-Type: application/json');
+    echo json_encode($students);
 }
 
 // Load course list

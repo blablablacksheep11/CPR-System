@@ -212,7 +212,20 @@ include('../include/database.php');
                                                     <select class="form-select" id="intake">
                                                         <option selected disabled hidden>Intake</option>
                                                         <?php
-                                                        $intake = "SELECT DISTINCT intake FROM student WHERE department = '" . $_SESSION['department'] . "'";
+                                                        $programmeCode = [];
+
+                                                        // Get the programme the register under the program leader
+                                                        $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "' ORDER BY name";
+                                                        $result = mysqli_query($connection, $programme);
+
+                                                        while ($programmeinfo = mysqli_fetch_assoc($result)) {
+                                                            $programmeCode[] = $programmeinfo['code']; // Store the programme code in an array
+                                                        }
+
+                                                        // Convert the array into a string format for SQL
+                                                        $programList = "'" . implode("', '", $programmeCode) . "'";
+
+                                                        $intake = "SELECT DISTINCT intake FROM student WHERE programme IN ($programList) ORDER BY intake";
                                                         $result = mysqli_query($connection, $intake);
                                                         while ($row = mysqli_fetch_assoc($result)) {
                                                             echo "<option value='" . $row['intake'] . "'>" . $row['intake'] . "</option>";
@@ -225,7 +238,7 @@ include('../include/database.php');
                                                     <select class="form-select" id="programme">
                                                         <option selected disabled hidden>Programme</option>
                                                         <?php
-                                                        $programme = "SELECT * FROM programme WHERE department = '" . $_SESSION['department'] . "'";
+                                                        $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "' ORDER BY name";
                                                         $result = mysqli_query($connection, $programme);
                                                         while ($row = mysqli_fetch_assoc($result)) {
                                                             echo "<option value='" . $row['code'] . "'>" . $row['name'] . "</option>";
@@ -277,7 +290,7 @@ include('../include/database.php');
             function loadStudent() {
                 $.ajax({
                     type: 'POST',
-                    url: '../program_leader/action.php', 
+                    url: '../program_leader/action.php',
                     data: {
                         student: "student"
                     },
@@ -421,14 +434,34 @@ include('../include/database.php');
                 let data = [];
 
                 // Get all filter values, format them into SQL query
-                const filters = [
-                    { id: '#name-start', format: val => `student.name LIKE '${val}%'` },
-                    { id: '#name-end', format: val => `student.name LIKE '%${val}'` },
-                    { id: 'input[name="gender"]:checked', format: val => `student.gender = '${val}'` },
-                    { id: '#email-start', format: val => `student.email LIKE '${val}%'` },
-                    { id: '#email-end', format: val => `student.email LIKE '%${val}'` },
-                    { id: '#intake', format: val => `student.intake = ${val}` },
-                    { id: '#programme',format: val => `student.programme = '${val}'` }
+                const filters = [{
+                        id: '#name-start',
+                        format: val => `student.name LIKE '${val}%'`
+                    },
+                    {
+                        id: '#name-end',
+                        format: val => `student.name LIKE '%${val}'`
+                    },
+                    {
+                        id: 'input[name="gender"]:checked',
+                        format: val => `student.gender = '${val}'`
+                    },
+                    {
+                        id: '#email-start',
+                        format: val => `student.email LIKE '${val}%'`
+                    },
+                    {
+                        id: '#email-end',
+                        format: val => `student.email LIKE '%${val}'`
+                    },
+                    {
+                        id: '#intake',
+                        format: val => `student.intake = ${val}`
+                    },
+                    {
+                        id: '#programme',
+                        format: val => `student.programme = '${val}'`
+                    }
                 ];
 
                 // Loop through filters, append to data array if value is not empty

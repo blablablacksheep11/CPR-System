@@ -33,13 +33,10 @@ include("../include/database.php");
             }
 
             foreach ($programmeCode as $code) {
-                $student = "SELECT student.*, programme.name AS programme FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY name";
+                $student = "SELECT student.* FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY name";
                 $result = mysqli_query($connection, $student);
             }
             
-            // Fetch lecturer info
-            $lecturer = 'SELECT * FROM  WHERE department = "' . $_SESSION['department'] . '" ORDER BY name';
-            $result = mysqli_query($connection, $lecturer);
             if ($result) {
                 if (mysqli_num_rows($result) > 0) {
                     $counter = 1;
