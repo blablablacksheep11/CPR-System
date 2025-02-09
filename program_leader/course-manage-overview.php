@@ -177,7 +177,7 @@ if (isset($_POST['offerid'])) {
                                     <!-- Row to carry course name -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
-                                            <label for="inputPassword6" class="col-form-label p-0 m-0">Course Name:</label>
+                                            <label class="col-form-label p-0 m-0">Course Name:</label>
                                         </div>
                                         <div class="col-auto p-0 m-0">
                                             <p class="p-0 m-0"><?php echo $courseinfo['name']; ?></p>
@@ -187,7 +187,7 @@ if (isset($_POST['offerid'])) {
                                     <!-- Row to carry course code -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
-                                            <label for="inputPassword6" class="col-form-label p-0 m-0">Course Code:</label>
+                                            <label class="col-form-label p-0 m-0">Course Code:</label>
                                         </div>
                                         <div class="col-auto p-0 m-0">
                                             <p class="p-0 m-0"><?php echo $courseinfo['code']; ?></p>
@@ -197,17 +197,34 @@ if (isset($_POST['offerid'])) {
                                     <!-- Row to carry course credit hour -->
                                     <div class="row m-0 mt-1 p-0 py-2 gap-2">
                                         <div class="col-2 p-0 m-0">
-                                            <label for="inputPassword6" class="col-form-label p-0 m-0">Credit Hours:</label>
+                                            <label class="col-form-label p-0 m-0">Credit Hours:</label>
                                         </div>
                                         <div class="col-auto p-0 m-0">
                                             <p class="p-0 m-0"><?php echo $courseinfo['credit_hour']; ?></p>
                                         </div>
                                     </div>
 
+                                    <!-- Row to carry course code -->
+                                    <div class="row m-0 mt-1 p-0 py-2 gap-2">
+                                        <div class="col-2 p-0 m-0">
+                                            <label class="col-form-label p-0 m-0">Programme:</label>
+                                        </div>
+                                        <div class="col-auto p-0 m-0">
+                                            <p class="p-0 m-0">
+                                                <?php
+                                                $programmename = "SELECT name FROM programme WHERE code = '".$courseinfo['programme']."'";
+                                                $result = mysqli_query($connection, $programmename);
+                                                $programmename = mysqli_fetch_assoc($result);
+                                                echo $programmename['name'];
+                                                ?>
+                                            </p>
+                                        </div>
+                                    </div>
+
                                     <!-- Row to carry course clo (label) -->
                                     <div class="row m-0 mt-2 p-0 py-2 gap-2 align-items-center">
                                         <div class="col-2 p-0 m-0 align-items-center">
-                                            <label for="inputPassword6" class="col-form-label p-0 m-0">Learning Outcomes:</label>
+                                            <label class="col-form-label p-0 m-0">Learning Outcomes:</label>
                                         </div>
                                     </div>
 
@@ -310,7 +327,6 @@ if (isset($_POST['offerid'])) {
                 $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
                 $('.modal-content').load('../program_leader/load-assignmodal.php'); // Load modal
                 loadLecturer() // Load lecturer name
-                const offerid = sessionStorage.getItem('offerid'); // Get offerid from session storage
 
                 // Event listener for select button 
                 $(document).on("click", ".select-btn", function(e) {
@@ -323,7 +339,7 @@ if (isset($_POST['offerid'])) {
                         url: "../program_leader/action.php",
                         data: {
                             select: "select",
-                            offerid: offerid,
+                            offerid: sessionStorage.getItem('offerid'),
                             lecturerid: lecturerid
                         },
                         success: function(response) {

@@ -9,8 +9,8 @@ include("../include/database.php");
     </h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<div class="modal-body text-start border border-0">
-    <table class="table">
+<div class="modal-body text-start border border-0 py-0">
+    <table class="table table-hover m-0">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -21,48 +21,77 @@ include("../include/database.php");
         </thead>
         <tbody>
             <?php
-            $programmeCode = [];
-            $students = [];
+            // Get the course code of the current course
+            $course = "SELECT course_code FROM course_offer WHERE id = '" . $_SESSION["offerid"] . "'";
+            $result = mysqli_query($connection, $course);
+            $coursecode = mysqli_fetch_assoc($result);
 
-            // Get the programme the register under the program leader
-            $programme = "SELECT * FROM programme WHERE program_leader = '" . $_SESSION['id'] . "'";
+            // Get the programme of the current course
+            $programme = "SELECT programme FROM course WHERE code = '" . $coursecode["course_code"] . "'";
             $result = mysqli_query($connection, $programme);
+            $programme = mysqli_fetch_assoc($result);
 
-            while ($programmeinfo = mysqli_fetch_assoc($result)) {
-                $programmeCode[] = $programmeinfo['code']; // Store the programme code in an array
-            }
+            // Get the student under the programme but haven't enrolled in the course
+            $student = "SELECT student.* FROM student LEFT JOIN enrolment ON student.id = enrolment.student_id AND enrolment.course_code = '" . $coursecode["course_code"] . "' WHERE programme = '" . $programme["programme"] . "' AND enrolment.student_id IS NULL ORDER BY name";
+            $result = mysqli_query($connection, $student);
 
-            foreach ($programmeCode as $code) {
-                $student = "SELECT student.* FROM student INNER JOIN programme ON student.programme = programme.code WHERE student.programme = '$code' ORDER BY name";
-                $result = mysqli_query($connection, $student);
-            }
-            
             if ($result) {
                 if (mysqli_num_rows($result) > 0) {
-                    $counter = 1;
 
-                    // Display lecturer info in list
-                    while ($lecturerdetail = mysqli_fetch_assoc($result)) {
+                    // Display student info in list
+                    while ($studentdetail = mysqli_fetch_assoc($result)) {
             ?>
-                        <tr>
-                            <th class="py-3"><?php echo $counter; ?></th>
-                            <td class="py-3"><?php echo $lecturerdetail["name"] ?> &nbsp;<i class="bi <?php echo $lecturerdetail['gender'] === 'female' ? 'bi-gender-female' : 'bi-gender-male'; ?>"></i></td>
-                            <td class="py-3"><?php echo $lecturerdetail["position"] ?></td>
-                            <td class="py-3"><button class="btn btn-primary select-btn" value="<?php echo $lecturerdetail['id']; ?>">Select</button></td>
+                        <tr onclick="toggleCheckbox(<?php echo $studentdetail['id']; ?>)">
+                            <td class="py-3"><input class="form-check-input" type="checkbox" value="<?php echo $studentdetail["id"] ?>" id="<?php echo $studentdetail["id"] ?>" onclick="event.stopPropagation();"></td>
+                            <td class="py-3"><?php echo $studentdetail["student_id"] ?></td>
+                            <td class="py-3"><?php echo $studentdetail["name"] ?> &nbsp;<i class="bi <?php echo $studentdetail['gender'] === 'female' ? 'bi-gender-female' : 'bi-gender-male'; ?>"></i></td>
+                            <td class="py-3"><?php echo $studentdetail["intake"] ?></td>
                         </tr>
                     <?php
-                        $counter++;
                     }
                 } else {
                     ?>
-                    <td class="text-center border border-0" colspan="3">No available lecturer</td>
+                    <td class="text-center border border-0" colspan="4">No available student</td>
                 <?php
                 }
             } else { ?>
-                <td class="text-center border border-0" colspan="3">Failed to load lecturer list. Please try again later.</td>
+                <td class="text-center border border-0" colspan="4">Failed to load student list. Please try again later.</td>
             <?php
             }
             ?>
         </tbody>
     </table>
 </div>
+<div class="modal-footer d-flex justify-content-between border border-0">
+    <p class="ms-3" id="count-label"></p>
+    <button class="btn btn-primary" id="add-btn2" data-bs-dismiss="modal">Add</button>
+</div>
+
+<script>
+    if (typeof counter == "undefined" || typeof students == "undefined") {
+        var counter = 0;
+        var students = [];
+    } else {
+        counter = 0;
+        students = [];
+    }
+
+    document.getElementById('count-label').innerHTML = counter + " selected";
+
+    function toggleCheckbox(id) {
+        let checkbox = document.getElementById(id);
+        checkbox.checked = !checkbox.checked; // Toggle the checkbox state
+        if (checkbox.checked) { // If the checkbox is checked
+            students.push(checkbox.value);
+            counter++;
+        } else { // If the checkbox is unchecked
+            const index = students.indexOf(checkbox.value);
+            if (index !== -1) {
+                students.splice(index, 1);
+            }
+            counter--;
+        }
+
+        document.getElementById('count-label').innerHTML = (counter) + " selected";
+    }
+</script>

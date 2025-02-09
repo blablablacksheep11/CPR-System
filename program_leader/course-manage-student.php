@@ -157,6 +157,7 @@ include('../include/database.php');
                                                 <th scope="col">Intake</th>
                                                 <th scope="col">Programme</th>
                                                 <th scope="col">Action</th>
+                                                <th scope="col" class="d-flex justify-content-end"><a class="btn btn-primary" id="add-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add</a></th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbody">
@@ -188,7 +189,7 @@ include('../include/database.php');
                     url: "../program_leader/action.php",
                     data: {
                         enrolment: "enrolment",
-                        offerid: offerid,
+                        offerid: sessionStorage.getItem('offerid'),
                         currentdate: sessionStorage.getItem("currentdate")
                     },
                     success: function(response) {
@@ -208,11 +209,11 @@ include('../include/database.php');
                                                     <td class='py-3'>${row.email}</td>
                                                     <td class='py-3'>${row.intake}</td>
                                                     <td class='py-3'>${row.programme}</td>
-                                                    <td class="py-3">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option value="${row.id}" selected>View</option>
-                                                            <option value="${row.id}">Edit</option>
-                                                            <option value="${row.id}">Delete</option>
+                                                    <td colspan='2' class="py-3">
+                                                        <select class="form-select" id="action" data-value="${row.id}">
+                                                            <option value="null" selected disabled hidden>Action</option>
+                                                            <option value="view">View</option>
+                                                            <option value="remove">Remove</option>
                                                         </select>
                                                     </td>
                                                 </tr>`;
@@ -223,16 +224,68 @@ include('../include/database.php');
                 })
             }
 
-
             $('#top-navbar').load('../program_leader/top-navbar.php'); // Load top navbar
             $('#side-navbar').load('../program_leader/side-navbar.html'); // Load side navbar
-            $('.modal-content').load('../program_leader/load-enrolmodal.php'); // Load modal
-            const offerid = sessionStorage.getItem('offerid'); // Get offerid from session storage
             loadEnrolment(); // Load enrolment data
 
-            let failedMessage = `<tr><td colspan="7" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
-            let nullMessage = `<tr><td colspan="7" class="text-center py-3 border border-0">No students found enrolled in this course.<br><a class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add</a></td></tr>`; // Message to display when no student found
-            let emptyMessage = `<tr><td colspan="7" class="text-center py-3 border border-0">No student found.</td></tr>`; // Message to display when no student found
+
+            let failedMessage = `<tr><td colspan="8" class="text-center py-3 border border-0">Search failed. Please try again later.</td></tr>`; // Message to display when search failed
+            let nullMessage = `<tr><td colspan="8" class="text-center py-3 border border-0">No students found enrolled in this course.<br><a class="btn btn-primary mt-2" id="add-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add</a></td></tr>`; // Message to display when no student found
+            let emptyMessage = `<tr><td colspan="8" class="text-center py-3 border border-0">No student found.</td></tr>`; // Message to display when no student found
+
+            $(document).on("click", "#add-btn", function(e) {
+                e.preventDefault();
+                $('.modal-content').load('../program_leader/load-enrolmodal.php'); // Load modal
+            })
+
+
+            $(document).on("click", "#add-btn2", function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../program_leader/action.php",
+                    data: {
+                        add: "add",
+                        offerid: sessionStorage.getItem('offerid'),
+                        students: students,
+                        currentdate: sessionStorage.getItem("currentdate")
+                    },
+                    success: function(response) {
+                        if (response == "success") {
+                            loadEnrolment();
+                        } else if (response == "error") {
+                            alert("Error adding student");
+                        }
+                    }
+                })
+            })
+
+            $(document).on("change", "#action", function(e) {
+                e.preventDefault();
+                const action = $(this).val();
+                const studentid = $(this).data("value");
+
+                if (action == "remove") {
+                    $.ajax({
+                        type: "POST",
+                        url: "../program_leader/action.php",
+                        data: {
+                            remove2: "remove",
+                            offerid: sessionStorage.getItem('offerid'),
+                            studentid: studentid,
+                            currentdate: sessionStorage.getItem("currentdate")
+                        },
+                        success: function(response) {
+                            if (response == "success") {
+                                loadEnrolment();
+                            } else if (response == "error") {
+                                alert("Error removing student");
+                            }
+                        }
+                    })
+                }
+            })
         })
     </script>
     <!-- Bootstrap CSS -->

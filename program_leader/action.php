@@ -414,7 +414,7 @@ if (isset($_POST["enrolment"])) {
     $coursecode = mysqli_fetch_assoc($result);
 
     // Get the student enrolled in the course
-    $enrolment = "SELECT student.* FROM student INNER JOIN enrolment ON student.id = enrolment.student_id WHERE enrolment.student_id = student.id AND enrolment.semester = '" . $semesterid["id"] . "' AND enrolment.course_code = '" . $coursecode["course_code"] . "'";
+    $enrolment = "SELECT student.*, programme.name AS programme FROM student INNER JOIN enrolment ON student.id = enrolment.student_id INNER JOIN programme ON student.programme = programme.code WHERE enrolment.student_id = student.id AND enrolment.semester = '" . $semesterid["id"] . "' AND enrolment.course_code = '" . $coursecode["course_code"] . "' ORDER BY student.name";
     $result = mysqli_query($connection, $enrolment);
 
     if ($result) {
@@ -427,6 +427,63 @@ if (isset($_POST["enrolment"])) {
             header('Content-Type: application/json');
             echo json_encode($students);
         }
+    } else {
+        echo "error";
+    }
+}
+
+// Load add student into course
+if (isset($_POST['add'])) {
+    $offerid = $_POST["offerid"];
+    $students = $_POST["students"];
+    $currentdate = $_POST["currentdate"];
+
+    // Get the semester id based on current date
+    $semester = "SELECT id FROM semester WHERE start < '$currentdate' AND end > '$currentdate'";
+    $result = mysqli_query($connection, $semester);
+    $semesterid = mysqli_fetch_assoc($result);
+
+    // Get the course code of the offer id
+    $coursecode = "SELECT course_code FROM course_offer WHERE id = '$offerid'";
+    $result = mysqli_query($connection, $coursecode);
+    $coursecode = mysqli_fetch_assoc($result);
+
+    foreach ($students as $student) {
+        $enrolment = "INSERT INTO enrolment (student_id, course_code, semester) VALUES('$student', '" . $coursecode['course_code'] . "', '" . $semesterid['id'] . "')";
+        $result = mysqli_query($connection, $enrolment);
+        if (!$result) {
+            break;
+        }
+    }
+
+    if ($result) {
+        echo "success";
+    } else {
+        echo "error";
+    }
+}
+
+// Remove student from course
+if (isset($_POST['remove2'])) {
+    $offerid = $_POST["offerid"];
+    $studentid = $_POST["studentid"];
+    $currentdate = $_POST["currentdate"];
+
+    // Get the semester id based on current date
+    $semester = "SELECT id FROM semester WHERE start < '$currentdate' AND end > '$currentdate'";
+    $result = mysqli_query($connection, $semester);
+    $semesterid = mysqli_fetch_assoc($result);
+
+    // Get the course code of the offer id
+    $coursecode = "SELECT course_code FROM course_offer WHERE id = '$offerid'";
+    $result = mysqli_query($connection, $coursecode);
+    $coursecode = mysqli_fetch_assoc($result);
+
+    $remove = "DELETE FROM enrolment WHERE student_id = '$studentid' AND course_code = '".$coursecode["course_code"]."' AND semester = '".$semesterid['id']."'";
+    $result = mysqli_query($connection, $remove);
+    
+    if($result){
+        echo "success";
     } else {
         echo "error";
     }
