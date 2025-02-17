@@ -212,7 +212,7 @@ if (isset($_POST['offerid'])) {
                                         <div class="col-auto p-0 m-0">
                                             <p class="p-0 m-0">
                                                 <?php
-                                                $programmename = "SELECT name FROM programme WHERE code = '".$courseinfo['programme']."'";
+                                                $programmename = "SELECT name FROM programme WHERE code = '" . $courseinfo['programme'] . "'";
                                                 $result = mysqli_query($connection, $programmename);
                                                 $programmename = mysqli_fetch_assoc($result);
                                                 echo $programmename['name'];
@@ -244,49 +244,60 @@ if (isset($_POST['offerid'])) {
                                                 $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
                                                 $result = mysqli_query($connection, $clo);
                                                 $cloid = mysqli_fetch_assoc($result);
-                                                $cloid = explode(",", $cloid['clos']); // Break the clos into individual pieces
 
-                                                $counter = 1;
+                                                if ($cloid["clos"] != "UNDEFINED") {
+                                                    $cloid = explode(",", $cloid['clos']); // Break the clos into individual pieces
+                                                    $counter = 1;
 
-                                                // Fetch info of each individual clo
-                                                foreach ($cloid as $id) {
-                                                    $clo = "SELECT * FROM clo WHERE id = '$id'";
-                                                    $result = mysqli_query($connection, $clo);
-                                                    $clodetail = mysqli_fetch_assoc($result);
+                                                    // Fetch info of each individual clo
+                                                    foreach ($cloid as $id) {
+                                                        $clo = "SELECT * FROM clo WHERE id = '$id'";
+                                                        $result = mysqli_query($connection, $clo);
+                                                        $clodetail = mysqli_fetch_assoc($result);
                                                 ?>
-                                                    <tr>
-                                                        <th class="py-3"><?php echo $counter; ?></th>
-                                                        <td class="py-3"><?php echo $clodetail['details']; ?></td>
-                                                        <td class="py-3 text-center"><?php echo $clodetail['weightage']; ?></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <th class="py-3"><?php echo $counter; ?></th>
+                                                            <td class="py-3"><?php echo $clodetail['details']; ?></td>
+                                                            <td class="py-3 text-center"><?php echo $clodetail['weightage']; ?></td>
+                                                        </tr>
+                                                    <?php
+                                                        $counter++;
+                                                    }
+                                                } else { ?>
+                                                    <td colspan="3" class="py-3 text-center">CLO undefined yet.</td>
                                                 <?php
-                                                    $counter++;
                                                 } ?>
                                             </tbody>
                                             <tfoot>
-                                                <tr>
-                                                    <th class="py-3"></th>
-                                                    <th class="py-3">Total</th>
-                                                    <th class="py-3 text-center">
-                                                        <?php
-                                                        // Get the clos registered under current course
-                                                        $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
-                                                        $result = mysqli_query($connection, $clo);
-                                                        $cloid = mysqli_fetch_assoc($result);
-                                                        $cloid = explode(",", $cloid['clos']);
+                                                <?php
+                                                // Get the clos registered under current course
+                                                $clo = "SELECT course.clos FROM course INNER JOIN course_offer ON course.code = course_offer.course_code WHERE course_offer.id = '" . $_SESSION['offerid'] . "'";
+                                                $result = mysqli_query($connection, $clo);
+                                                $cloid = mysqli_fetch_assoc($result);
 
-                                                        $sum = 0;
-                                                        // Sum up the weightage of all clos
-                                                        foreach ($cloid as $id) {
-                                                            $weightage = "SELECT weightage FROM clo WHERE id = '$id'";
-                                                            $result = mysqli_query($connection, $weightage);
-                                                            $weightage = mysqli_fetch_assoc($result);
-                                                            $sum += $weightage['weightage'];
-                                                        }
-                                                        echo $sum; // Output the total weightage
-                                                        ?>
-                                                    </th>
-                                                </tr>
+                                                if ($cloid["clos"] != "UNDEFINED") {
+                                                    $cloid = explode(",", $cloid['clos']);
+                                                    $sum = 0;
+                                                    // Sum up the weightage of all clos
+                                                    foreach ($cloid as $id) {
+                                                        $weightage = "SELECT weightage FROM clo WHERE id = '$id'";
+                                                        $result = mysqli_query($connection, $weightage);
+                                                        $weightage = mysqli_fetch_assoc($result);
+                                                        $sum += $weightage['weightage'];
+                                                    }
+                                                ?>
+                                                    <tr>
+                                                        <th class="py-3"></th>
+                                                        <th class="py-3">Total</th>
+                                                        <th class="py-3 text-center">
+                                                            <?php
+                                                            echo $sum; // Output the total weightage 
+                                                            ?>
+                                                        </th>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
                                             </tfoot>
                                         </table>
                                     </div>

@@ -71,7 +71,7 @@ include('../include/database.php');
             height: 120px;
         }
 
-        #course-container {
+        #table-container {
             min-height: calc(100% - 120px);
             max-height: fit-content;
         }
@@ -144,7 +144,7 @@ include('../include/database.php');
                             </div>
                         </div>
 
-                        <div class="row m-0 p-0 pt-3 bg-white" id="course-container">
+                        <div class="row m-0 p-0 pt-3 bg-white" id="table-container">
                             <div class="container p-0 m-0">
                                 <div class="row p-0 m-0 px-4">
                                     <table class="table table-sm table-hover">

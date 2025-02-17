@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2025 at 09:17 AM
+-- Generation Time: Feb 10, 2025 at 02:48 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,14 +92,14 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`id`, `code`, `name`, `department`, `programme`, `credit_hour`, `level`, `year`, `clos`) VALUES
-(1, 'DMS4024', 'BIG DATA TECHNOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
+(1, 'DMS4024', 'BIG DATA TECHNOLOGY', 'EBIT', 'CIT', 3, 'Diploma', 2, 'UNDEFINED'),
 (2, 'PRG4033', 'INTRODUCTION TO INTERNET PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2, '7,8,9'),
 (3, 'PRG4064', 'INTRODUCTION TO PYTHON PROGRAMMING', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
 (4, 'SDD4063', 'USER EXPERIENCE(UX) DESIGN', 'EBIT', 'DIIT', 3, 'Diploma', 2, 'UNDEFINED'),
 (5, 'ITN4023', 'APPLIED DIGITAL SKILLS', 'EBIT', 'DIIT', 3, 'Diploma', 1, '1,2,3'),
 (6, 'COM4013', 'COMPUTER ORGANIZATION', 'EBIT', 'DIIT', 3, 'Diploma', 1, '4,5,6'),
 (7, 'DCN4013', 'DATA COMMUNICATION AND NETWORKING', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
-(8, 'DMS4013', 'DATABASE MANAGEMENT SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
+(8, 'DMS4013', 'DATABASE MANAGEMENT SYSTEM', 'EBIT', 'CIT', 3, 'Diploma', 1, 'UNDEFINED'),
 (9, 'IOS4013', 'INTRODUCTION TO OPERATING SYSTEM', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
 (10, 'PRG4013', 'PROGRAMMING METHODOLOGY', 'EBIT', 'DIIT', 3, 'Diploma', 1, 'UNDEFINED'),
 (11, 'AWS4023', 'ACADEMIC ENGLISH', 'GEN', '----', 3, 'Diploma', 1, 'UNDEFINED'),
@@ -163,9 +163,10 @@ CREATE TABLE `course_offer` (
 --
 
 INSERT INTO `course_offer` (`id`, `course_code`, `semester`, `lecturer`) VALUES
-(3, 'ITN4023', 1, 1),
-(4, 'COM4013', 1, 2),
-(7, 'PRG4033', 1, 0);
+(15, 'ITN4023', 1, 0),
+(16, 'DMS4013', 1, 0),
+(17, 'DMS4024', 1, 0),
+(18, 'SDD4063', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -189,6 +190,26 @@ INSERT INTO `department` (`id`, `code`, `name`) VALUES
 (3, 'GEN', 'General'),
 (4, 'GOV', 'Governance'),
 (5, 'ECE', 'Early Childhood Education');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `enrolment`
+--
+
+CREATE TABLE `enrolment` (
+  `id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `course_code` varchar(15) NOT NULL,
+  `semester` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `enrolment`
+--
+
+INSERT INTO `enrolment` (`id`, `student_id`, `course_code`, `semester`) VALUES
+(73, 9, 'DMS4013', 1);
 
 -- --------------------------------------------------------
 
@@ -240,7 +261,8 @@ INSERT INTO `programme` (`id`, `code`, `name`, `department`, `level`, `program_l
 (1, 'DIIT', 'Diploma in Information Technology', 'EBIT', 'Diploma', 1),
 (2, 'DIHM', 'Diploma in Hotel Management', 'HAT', 'Diploma', 0),
 (3, 'DITM', 'Diploma in Tourism Management', 'HAT', 'Diploma', 0),
-(4, 'DIEE', 'Diploma in Electrical and Electronics Engineering', 'EBIT', 'Diploma', 0);
+(4, 'DIEE', 'Diploma in Electrical and Electronics Engineering', 'EBIT', 'Diploma', 0),
+(6, 'CIT', 'Certificate in Information Technology', 'EBIT', 'Certificate', 1);
 
 -- --------------------------------------------------------
 
@@ -309,15 +331,15 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `student_id`, `name`, `gender`, `email`, `birthday`, `password`, `department`, `programme`, `intake`) VALUES
-(1, 'SCPG2300128', 'LAM YONG QIN', 'male', 'scpg2300128@segi4u.my', '2005-01-11', 'scpg2300128@segi4u.my', 'EBIT', 'DIIT', 202306),
+(1, 'SCPG2300128', 'LAM YONG QIN', 'male', 'scpg2300128@segi4u.my', '2005-01-11', 'scpg2300128@segi4u.my', 'EBIT', 'CIT', 202301),
 (2, 'SCPG2300080', 'LEE KAI MIN', 'male', 'scpg2300080@segi4u.my', '2004-11-17', 'scpg2300080@segi4u.my', 'EBIT', 'DIIT', 202309),
-(3, 'SCPG2300152', 'CALVIN NG WEI KEONG', 'male', 'scpg2300152@segi4u.my', '2002-08-29', 'scpg2300152@segi4u.my', 'EBIT', 'DIIT', 202309),
+(3, 'SCPG2300152', 'CALVIN NG WEI KEONG', 'male', 'scpg2300152@segi4u.my', '2002-08-29', 'scpg2300152@segi4u.my', 'EBIT', 'CIT', 202309),
 (4, 'SCPG2300153', 'CHEONG KAI QI', 'female', 'scpg2300153@segi4u.my', '2005-10-05', 'scpg2300153@segi4u.my', 'EBIT', 'DIIT', 202309),
 (5, 'SCPG2300129', 'KIVEN RAJ A/L SARAVANAN', 'male', 'scpg2300129@segi4u.my', '2005-02-18', 'scpg2300129@segi4u.my', 'EBIT', 'DIIT', 202306),
 (6, 'SCPG2300042', 'LIM KAH WAI', 'male', 'scpg2300042@segi4u.my', '2002-06-28', 'scpg2300042@segi4u.my', 'HAT', 'DIHM', 202306),
 (7, 'SCPG2300064', 'PUSITA SAECHEN', 'female', 'scpg2300064@segi4u.my', '2004-08-31', 'scpg2300064@segi4u.my', 'HAT', 'DITM', 202306),
 (8, 'SCPG2300150', 'LEE CHI QI', 'female', 'scpg2300150@segi4u.my', '2005-08-09', 'scpg2300150@segi4u.my', 'EBIT', 'DIIT', 202309),
-(9, 'SCPG2300157', 'MOHAMMAD ZAINI BIN HARUN IBURAHIM', 'male', 'scpg2300157@segi4u.my', '2003-09-22', 'scpg2300157@segi4u.my', 'EBIT', 'DIIT', 202309),
+(9, 'SCPG2300157', 'MOHAMMAD ZAINI BIN HARUN IBURAHIM', 'male', 'scpg2300157@segi4u.my', '2003-09-22', 'scpg2300157@segi4u.my', 'EBIT', 'CIT', 202309),
 (10, 'SCPG2300056', 'AHMAD FARIS BIN MOHAMED ASRI', 'male', 'scpg2300056@segi4u.my', '2004-01-23', 'scpg2300056@segi4u.my', 'EBIT', 'DIIT', 202306);
 
 --
@@ -358,6 +380,12 @@ ALTER TABLE `course_offer`
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `enrolment`
+--
+ALTER TABLE `enrolment`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -422,7 +450,7 @@ ALTER TABLE `course_category`
 -- AUTO_INCREMENT for table `course_offer`
 --
 ALTER TABLE `course_offer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -431,16 +459,22 @@ ALTER TABLE `department`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `enrolment`
+--
+ALTER TABLE `enrolment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+
+--
 -- AUTO_INCREMENT for table `lecturer`
 --
 ALTER TABLE `lecturer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `programme`
 --
 ALTER TABLE `programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `program_leader`
@@ -458,7 +492,7 @@ ALTER TABLE `semester`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
